@@ -28,9 +28,14 @@ import java.awt.Color;
 
 import javax.swing.JScrollPane;
 
+import model.Docente;
+
 import org.jdesktop.swingx.autocomplete.AutoCompleteComboBoxEditor;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
+
+import controller.ControllerQuestions;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -38,27 +43,19 @@ public class QuestionsView extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
+//	private ControllerQuestions controllerQuestions;
+	private Docente user;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					QuestionsView frame = new QuestionsView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public QuestionsView() {
+	public QuestionsView(Docente user) {
+		this.user=user;
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
 		contentPane = new JPanel();
@@ -67,32 +64,37 @@ public class QuestionsView extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnFechar = new JButton("Sair");
-	/*	btnFechar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				btnFechar.add(btnFechar);
-			}
-		});
-		btnFechar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnFechar.remove(btnFechar);
-			}
-		});*/
-		
 		btnFechar.setBounds(573, 315, 97, 25);
 		contentPane.add(btnFechar);
 		
-		//btnFechar.add
+			btnFechar.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event){
+				dispose();
+				
+			}
+		});
 		
-		
-		
+	
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(12, 315, 97, 25);
 		contentPane.add(btnAdicionar);
 		
+			btnAdicionar.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					InsertQuestionsView teste = new InsertQuestionsView();
+					teste.setVisible(true);										
+				}
+			});
+		
 		JButton btnVerDetalhes = new JButton("Ver Detalhes");
 		btnVerDetalhes.setBounds(12, 277, 113, 25);
 		contentPane.add(btnVerDetalhes);
+		btnVerDetalhes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DetailsView details = new DetailsView();
+				details.setVisible(true);
+				}
+			});
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setEnabled(false);
@@ -107,16 +109,16 @@ public class QuestionsView extends JFrame {
 		JButton btnNewButton = new JButton("Minhas Perguntas");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			}
-		});
+				}
+			});
 		btnNewButton.setBounds(12, 74, 156, 25);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Outros Docentes");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			}
-		});
+				}
+			});
 		btnNewButton_1.setBounds(202, 74, 139, 25);
 		contentPane.add(btnNewButton_1);
 		
@@ -126,7 +128,7 @@ public class QuestionsView extends JFrame {
 		
 
 		JComboBox comboBox_modulo = new JComboBox(new Object[] {null, "Matematica", "Portugues", //Teste com módulos
-					        "Portunhol", "Informatica", "Ciencias" });
+					        									"Portunhol", "Informatica", "Ciencias" });
 		AutoCompleteDecorator.decorate(comboBox_modulo);
 		comboBox_modulo.setEditable(true);
 		comboBox_modulo.setBounds(84, 42, 113, 22);
@@ -176,13 +178,25 @@ public class QuestionsView extends JFrame {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel lblDocente = new JLabel("Docente:   Nome Docente");
+		JLabel lblDocente = new JLabel("Docente:  " + displayCurrentUser());// + displayCurrentUser());
 		lblDocente.setBounds(12, 13, 156, 16);
 		contentPane.add(lblDocente);
 		
 		
+	
 		
 		
+			
+		}
+	
+	
+	//Métodos---Não está no diagrama sequencia.
+	private String displayCurrentUser(){  
+				System.out.println(user);				//No relatorio está VOID
+			return	user.getNome(); // 				fazer random para escolher um Docente qualquer
+		
+		
+	
 	
 	}
 }

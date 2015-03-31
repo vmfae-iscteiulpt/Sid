@@ -17,20 +17,27 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JSlider;
 import javax.swing.JTextPane;
+
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ViewEditQuestion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
 
+	/**
+	 * Launch the application.
+	 */
 
 
 	/**
 	 * Create the frame.
 	 */
 	public ViewEditQuestion() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 800, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -52,6 +59,12 @@ public class ViewEditQuestion extends JFrame {
 		JButton btnSair = new JButton("Sair");
 		btnSair.setBounds(563, 315, 97, 25);
 		contentPane.add(btnSair);
+		
+		btnSair.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				dispose();
+			}
+		});
 		
 		
 		JComboBox comboBox_modulo = new JComboBox(new Object[] {null, "Matematica", "Portugues", //Teste com módulos

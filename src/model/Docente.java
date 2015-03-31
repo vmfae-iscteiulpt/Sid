@@ -1,15 +1,26 @@
 package model;
 
+import controller.ControllerQuestions;
+import controller.Database;
+
 public class Docente {
 	private String email;
 	private String nome;
 	private String password;
+	//private ControllerQuestions controller=new ControllerQuestions();
 	
 	
-	public Docente(String email, String nome, String password) {
-		this.email = email;
-		this.nome = nome;
-		this.password = password;
+	/*public Docente() { //
+		email = controller.verDocentes().get(0).getEmail();
+		nome = controller.verDocentes().get(0).getNome();
+		password = controller.verDocentes().get(0).getPassword();
+		
+	}
+	*/
+	public Docente(String email, String nome, String password){
+		this.email=email;
+		this.nome=nome;
+		this.password=password;
 	}
 	
 	public String toString() {

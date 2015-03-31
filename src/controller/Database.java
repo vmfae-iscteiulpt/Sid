@@ -46,7 +46,7 @@ public class Database {
 				Docente docente = new Docente(email, nome, password);
 				lista.add(docente);
 				
-				System.out.println("existe "+lista.size() + "docentes na lista da base de dados!");
+		//		System.out.println("existe "+lista.size() + "docentes na lista da base de dados!");
 			}
 			
 		} catch (SQLException e) {
@@ -55,8 +55,9 @@ public class Database {
 		}
 		return lista;
 	}
+	
 
-	public boolean inserirDocente(Docente docente) {
+/*	public boolean inserirDocente(Docente docente) {
 		try {
 			statement = conn.prepareStatement("INSERT INTO Docente VALUES (?,?,?)");
 			statement.setString(1, docente.getEmail());
@@ -93,6 +94,5 @@ public class Database {
 //		return 0;
 //	}
 	
-	
-
+	*/
 }
