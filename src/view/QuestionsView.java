@@ -43,7 +43,7 @@ public class QuestionsView extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-//	private ControllerQuestions controllerQuestions;
+	private ControllerQuestions controllerQuestions;
 	private Docente user;
 
 	/**
@@ -127,12 +127,22 @@ public class QuestionsView extends JFrame {
 		contentPane.add(lblMdulo);
 		
 
-		JComboBox comboBox_modulo = new JComboBox(new Object[] {null, "Matematica", "Portugues", //Teste com módulos
-					        									"Portunhol", "Informatica", "Ciencias" });
-		AutoCompleteDecorator.decorate(comboBox_modulo);
+	//	JComboBox comboBox_modulo = new JComboBox(new Object[] {null, "Matematica", "Portugues", //Teste com módulos
+		//			        									"Portunhol", "Informatica", "Ciencias" });
+		//AutoCompleteDecorator.decorate(comboBox_modulo);
+		JComboBox comboBox_modulo= new JComboBox();
 		comboBox_modulo.setEditable(true);
 		comboBox_modulo.setBounds(84, 42, 113, 22);
 		contentPane.add(comboBox_modulo);
+		
+		//	controllerQuestions.
+		
+		
+		
+		
+		
+		
+		
 		
 		JComboBox comboBox_submodulo = new JComboBox();
 		AutoCompleteDecorator.decorate(comboBox_submodulo);
@@ -192,7 +202,8 @@ public class QuestionsView extends JFrame {
 	
 	//Métodos---Não está no diagrama sequencia.
 	private String displayCurrentUser(){  
-				System.out.println(user);				//No relatorio está VOID
+				System.out.println(user); //No relatorio está VOID
+			//	System.out.println(user.hashCode());
 			return	user.getNome(); // 				fazer random para escolher um Docente qualquer
 		
 		

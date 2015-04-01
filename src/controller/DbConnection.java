@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import model.Docente;
 
-public class Database {
+public class DbConnection {
 	
 
 	
@@ -17,7 +17,7 @@ public class Database {
 	private PreparedStatement statement = null;
 	private ResultSet resultSet = null;
 	
-	public Database(){
+	public DbConnection(){
 		
 		String dbUrl = "jdbc:sqlanywhere:Tds:localhost:2638?eng=dbGroup9";
 		try {

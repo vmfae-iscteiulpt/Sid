@@ -8,8 +8,9 @@ import model.Docente;
 import controller.ControllerQuestions;
 
 public class MainTest {
-		private static ControllerQuestions controller = new ControllerQuestions();
-		private static Docente user;
+	private static Docente user;	
+	private static ControllerQuestions controller = new ControllerQuestions(user);
+		
 	/**
 	 * Launch the application.
 	 */
@@ -17,7 +18,8 @@ public class MainTest {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					user = new Docente(controller.verDocentes().get(i).getEmail(),controller.verDocentes().get(i).getNome(),controller.verDocentes().get(i).getPassword());
+					user = new Docente(controller.verDocentes().get(1).getEmail(),controller.verDocentes().get(1).getNome(),controller.verDocentes().get(1).getPassword());
+				//	System.out.println(user.hashCode());
 					QuestionsView frame = new QuestionsView(user);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -26,12 +28,12 @@ public class MainTest {
 			}
 		});
 	}
-		public static int getRandomNumber(){
+	/*	public static int getRandomNumber(){
 			Random gerador=new Random();
-			return gerador.nextInt(controller.verDocentes().size());
+			return gerador.nextInt(user.verDocentes().size());
 				}
 		static int i=getRandomNumber();
-		
+		*/
 	//	controller = new Controller();
 	//	Docente docente = new Docente("vipsa@iscte.pt", "Vanessa", "vdfbdf");
 	//	ArrayList<Docente> docentes = controller.verDocentes();

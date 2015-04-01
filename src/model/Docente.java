@@ -1,26 +1,30 @@
 package model;
 
+import java.util.ArrayList;
+
 import controller.ControllerQuestions;
-import controller.Database;
+import controller.DbConnection;
 
 public class Docente {
 	private String email;
 	private String nome;
 	private String password;
 	//private ControllerQuestions controller=new ControllerQuestions();
+	private DbConnection dbConnection= new DbConnection();
 	
 	
-	/*public Docente() { //
-		email = controller.verDocentes().get(0).getEmail();
-		nome = controller.verDocentes().get(0).getNome();
-		password = controller.verDocentes().get(0).getPassword();
-		
+	public Docente() { //
+		//email = this.verDocentes().get(0).getEmail();
+		//nome = this.verDocentes().get(0).getNome();
+		//password = this.verDocentes().get(0).getPassword();
+	//	dbConnection = new DbConnection();
 	}
-	*/
+	
 	public Docente(String email, String nome, String password){
 		this.email=email;
 		this.nome=nome;
 		this.password=password;
+	//	dbConnection = new DbConnection();
 	}
 	
 	public String toString() {
@@ -50,6 +54,9 @@ public class Docente {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	public ArrayList<Docente> verDocentes(){
+		return dbConnection.verDocentes();
 	}
 	
 	
