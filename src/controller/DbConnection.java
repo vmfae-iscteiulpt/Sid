@@ -34,7 +34,7 @@ public class DbConnection {
 		
 	}
 
-	public ArrayList<Docente> verDocentes() {
+	public ArrayList<Docente> getListDocentes() {
 		ArrayList<Docente> lista = new ArrayList<Docente>();
 		try {
 			statement = conn.prepareStatement("SELECT * FROM Docente");

@@ -66,8 +66,8 @@ public class ControllerQuestions {
 		
 	}
 */	
-	public ArrayList<Docente> verDocentes(){
-		System.out.println(currentUser);
-		return currentUser.verDocentes();
+	public Docente currentDocente(){
+		currentUser = new Docente();
+		return currentUser.currentDocenteDocente();
 	}
 }

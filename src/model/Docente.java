@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import controller.ControllerQuestions;
 import controller.DbConnection;
@@ -13,11 +14,7 @@ public class Docente {
 	private DbConnection dbConnection= new DbConnection();
 	
 	
-	public Docente() { //
-		//email = this.verDocentes().get(0).getEmail();
-		//nome = this.verDocentes().get(0).getNome();
-		//password = this.verDocentes().get(0).getPassword();
-	//	dbConnection = new DbConnection();
+	public Docente() {
 	}
 	
 	public Docente(String email, String nome, String password){
@@ -55,11 +52,15 @@ public class Docente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public ArrayList<Docente> verDocentes(){
-		return dbConnection.verDocentes();
+	public Docente currentDocenteDocente(){
+		ArrayList<Docente> listDocente = dbConnection.getListDocentes();
+		Random gerador=new Random();
+		int randonDoncente= gerador.nextInt(listDocente.size());
+		return listDocente.get(randonDoncente);
+		
 	}
 	
-	
+
 	
 	
 	
