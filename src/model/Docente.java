@@ -52,7 +52,7 @@ public class Docente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Docente currentDocenteDocente(){
+	public Docente currentDocenteDocente(){ //recebe um docente da base de dados
 		ArrayList<Docente> listDocente = dbConnection.getListDocentes();
 		Random gerador=new Random();
 		int randonDoncente= gerador.nextInt(listDocente.size());
