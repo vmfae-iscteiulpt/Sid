@@ -11,6 +11,9 @@ import model.Question;
 public class ControllerQuestions {
 
 	
+	//TESTE 
+	
+	
 	private boolean minhaQuestao;  // minhasQuestao no relatorio
 	private Question questaoSelecionada;
 	private LinkedList<Question> listaQuestoes; 
