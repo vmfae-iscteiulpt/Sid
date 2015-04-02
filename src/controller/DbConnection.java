@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import sybase.jdbc4.sqlanywhere.*;
 
+import model.Difficulty;
 import model.Docente;
 
 public class DbConnection {
@@ -35,21 +35,29 @@ public class DbConnection {
 		
 	}
 
+	public static void main(String[] args) {
+		DbConnection db=new  DbConnection();
+		System.out.println(db.getListDificuldade());
+	}
+	
+	
 	public ArrayList<Docente> getListDocentes() {
 		ArrayList<Docente> lista = new ArrayList<Docente>();
 		try {
 			statement = conn.prepareStatement("SELECT * FROM Docente");
 			resultSet = statement.executeQuery();
 			while(resultSet.next()) {
-				String email = resultSet.getString("EmailDocente");
+				String email = resultSet.getString("Email_Docente");
 				String nome = resultSet.getString("Nome");
 				String password = resultSet.getString("Senha");
 				Docente docente = new Docente(email, nome, password);
 				lista.add(docente);
 				
-		//		System.out.println("existe "+lista.size() + "docentes na lista da base de dados!");
 			}
-			
+			System.out.println("DB DONCENTE close?  "+conn.isClosed());
+			conn.close();
+			System.out.println("DB DONCENTE close? "+conn.isClosed());
+
 		} catch (SQLException e) {
 			System.err.println("problemas na ligação a base de dados, por favor tente novemente!");
 			e.printStackTrace();
@@ -58,42 +66,34 @@ public class DbConnection {
 	}
 	
 
-/*	public boolean inserirDocente(Docente docente) {
+	public ArrayList<Difficulty> getListDificuldade() {
+		ArrayList<Difficulty> listaDificuldade = new ArrayList<Difficulty>();
+		
 		try {
-			statement = conn.prepareStatement("INSERT INTO Docente VALUES (?,?,?)");
-			statement.setString(1, docente.getEmail());
-			statement.setString(2, docente.getNome());
-			statement.setString(3, docente.getPassword());
-			int result = statement.executeUpdate();
-			if(result == 1)
-				return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			statement = conn.prepareStatement("SELECT * FROM Nivel_Dificuldade");
+			resultSet = statement.executeQuery();
+			while(resultSet.next()) {
+				String designacaoNivel = resultSet.getString("Designacao_Nivel");
+		//		Difficulty dificuldade = new Difficulty();
+				Difficulty d = new Difficulty(designacaoNivel);
+				listaDificuldade.add(d);
+//				System.out.println(d.getDesignacaoNivel());
+
+
+			}	
+
+			System.out.println("DB DIFI close?  "+conn.isClosed());
+			conn.close();
+			System.out.println("DB DIFI close? "+conn.isClosed());
+		} catch (SQLException e) {
+				System.err.println("problemas na ligação a base de dados, por favor tente novemente!");
+				e.printStackTrace();
+			}
+	
+			return listaDificuldade;
+			
 		}
-		return false;
-	}
 	
-	
-//	public int inserirZona(Zona zonaAInserir) {
-//		try {
-//			PreparedStatement sql = conn.prepareStatement("INSERT "
-//					+ "INTO Zona VALUES (?, ?,?)");
-//			
-//			sql.setInt(1, zonaAInserir.getIdZona());
-//			sql.setString(2, zonaAInserir.getCidade());
-//			sql.setString(3, zonaAInserir.getDesignacao());
-//			
-//			return sql.executeUpdate();
-//			
-//		} catch (SQLException e) {
-//			System.err.println("erro11!");
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return 0;
-//	}
-	
-	*/
+
+
 }

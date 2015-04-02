@@ -10,17 +10,14 @@ import model.Question;
 
 public class ControllerQuestions {
 
-	
-	//TESTE 
-	
-	
+	//private DbConnection 
 	private boolean minhaQuestao;  // minhasQuestao no relatorio
 	private Question questaoSelecionada;
 	private LinkedList<Question> listaQuestoes; 
 	private ModuleToSubModuleMap moduleToSubModuleObject; 
 	//private DbConnection dbConnection;  //Adicionada por nós
 	private Docente currentUser;  //Relatorio diz USER
-	private Difficulty nivel;  //Não está diagrama no classes..E a classe chama-se Difficult
+	private Difficulty nivel = new Difficulty();  //Não está diagrama no classes..E a classe chama-se Difficult
 	
 	public ControllerQuestions(Docente currentUser){  //Relatorio diz USER
 		this.currentUser=currentUser;
@@ -29,9 +26,14 @@ public class ControllerQuestions {
 	public String[] loadSubModulos(String selectedModule){
 		return null;
 	}
-	public String[] populateNiveis(){
-		return null;
+	public String[] populateNiveis(){ 	//Dificuldade
+			return nivel.populateNiveis();							
 	}
+		
+		
+		
+		
+	
 	public LinkedList<Question> aplicarFiltro(String module,String subModule,String nivel,boolean minhaQuestao){ //Diagrama classe tem tbm int texto
 		return null;
 	}

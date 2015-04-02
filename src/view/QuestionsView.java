@@ -43,8 +43,9 @@ public class QuestionsView extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	private ControllerQuestions controllerQuestions;
 	private Docente user;
+	private ControllerQuestions controllerQuestions= new ControllerQuestions(user);
+
 
 	/**
 	 * Launch the application.
@@ -62,6 +63,11 @@ public class QuestionsView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		
+		JLabel lblDocente = new JLabel("Docente:  " + displayCurrentUser());// + displayCurrentUser());
+		lblDocente.setBounds(12, 13, 156, 16);
+		contentPane.add(lblDocente);
 		
 		JButton btnFechar = new JButton("Sair");
 		btnFechar.setBounds(573, 315, 97, 25);
@@ -135,7 +141,6 @@ public class QuestionsView extends JFrame {
 		comboBox_modulo.setBounds(84, 42, 113, 22);
 		contentPane.add(comboBox_modulo);
 		
-		//	controllerQuestions.
 		
 		
 		
@@ -150,14 +155,21 @@ public class QuestionsView extends JFrame {
 		comboBox_submodulo.setBounds(325, 39, 113, 22);
 		contentPane.add(comboBox_submodulo);
 		
-		JComboBox comboBox_dificuldade = new JComboBox(new Object[] {null, "Muito Fácil", "Fácil",   //Teste com dificuldades
-		        "Médio", "Dificil", "Muito Dificil" });
-		AutoCompleteDecorator.decorate(comboBox_dificuldade);
+		//JComboBox comboBox_dificuldade = new JComboBox(new Object[] {null, "Muito Fácil", "Fácil",   //Teste com dificuldades
+		  //      "Médio", "Dificil", "Muito Dificil" });
+		//AutoCompleteDecorator.decorate(comboBox_dificuldade);
+		
+		
+		JComboBox<String> comboBox_dificuldade= new JComboBox<String>();
 		comboBox_dificuldade.setEditable(true);
 		comboBox_dificuldade.setBounds(547, 42, 113, 22);
 		contentPane.add(comboBox_dificuldade);
+		String[] populateNiveis = controllerQuestions.populateNiveis(); //Erro estava aqui!!!!
 		
+		for(int i = 0; i < populateNiveis.length;i++){
+		comboBox_dificuldade.addItem(populateNiveis[i]);
 		
+		}
 		JLabel lblSubmdulo = new JLabel("Sub-Modulo");
 		lblSubmdulo.setBounds(235, 45, 84, 16);
 		contentPane.add(lblSubmdulo);
@@ -188,9 +200,7 @@ public class QuestionsView extends JFrame {
 		));
 		scrollPane.setViewportView(table);
 		
-		JLabel lblDocente = new JLabel("Docente:  " + displayCurrentUser());// + displayCurrentUser());
-		lblDocente.setBounds(12, 13, 250, 16);
-		contentPane.add(lblDocente);
+
 		
 		
 	

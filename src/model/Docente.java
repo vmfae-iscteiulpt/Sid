@@ -54,9 +54,10 @@ public class Docente {
 	}
 	public Docente currentDocente(){ //recebe um docente da base de dados
 		ArrayList<Docente> listDocente = dbConnection.getListDocentes();
+		
 		Random gerador=new Random();
-		int randonDoncente= gerador.nextInt(listDocente.size());
-		return listDocente.get(randonDoncente);
+		int randomDoncente= gerador.nextInt(listDocente.size());
+		return listDocente.get(randomDoncente);
 		
 	}
 	
