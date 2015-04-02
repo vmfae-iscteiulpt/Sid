@@ -68,6 +68,6 @@ public class ControllerQuestions {
 */	
 	public Docente currentDocente(){
 		currentUser = new Docente();
-		return currentUser.currentDocenteDocente();
+		return currentUser.currentDocente();
 	}
 }

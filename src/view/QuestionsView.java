@@ -189,7 +189,7 @@ public class QuestionsView extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JLabel lblDocente = new JLabel("Docente:  " + displayCurrentUser());// + displayCurrentUser());
-		lblDocente.setBounds(12, 13, 156, 16);
+		lblDocente.setBounds(12, 13, 250, 16);
 		contentPane.add(lblDocente);
 		
 		
