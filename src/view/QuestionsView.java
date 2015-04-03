@@ -1,18 +1,10 @@
 package view;
 
-//+//ALTERAR NOMES DE ACORDO COM O MODELO DE CLASSES
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.FlowLayout;
-
 import javax.swing.JButton;
-import javax.swing.JTextField;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -20,29 +12,22 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JSeparator;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.Color;
 
 import javax.swing.JScrollPane;
 
 import model.Docente;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteComboBoxEditor;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.jdesktop.swingx.autocomplete.ComboBoxCellEditor;
-
 import controller.ControllerQuestions;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class QuestionsView extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
 	private Docente user;

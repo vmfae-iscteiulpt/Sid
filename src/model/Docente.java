@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import controller.ControllerQuestions;
 import controller.DbConnection;
 
 public class Docente {
@@ -14,7 +13,6 @@ public class Docente {
 	private String nome;
 	private String password;
 
-	
 	//DB 
 	private DbConnection dbConnection= new DbConnection();
 	private Connection conn = dbConnection.getConn();
@@ -58,6 +56,7 @@ public class Docente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 	public Docente currentDocente(){ //recebe um docente da base de dados
 		ArrayList<Docente> lista = new ArrayList<Docente>();
 		resultSet=dbConnection.select("SELECT * FROM Docente");

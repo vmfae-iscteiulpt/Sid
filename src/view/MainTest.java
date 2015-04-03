@@ -1,8 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
-import java.util.ArrayList;
-import java.util.Random;
+
 
 import model.Docente;
 import controller.ControllerQuestions;

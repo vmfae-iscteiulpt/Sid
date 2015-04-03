@@ -5,14 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import model.Difficulty;
-import model.Docente;
 
 public class DbConnection {
-	
-
 	
 	private Connection conn = null;
 	private PreparedStatement statement = null;
@@ -31,7 +25,6 @@ public class DbConnection {
 		}
 	}
 	
-	
 	public Connection getConn() {
 		return conn;
 	}
@@ -49,35 +42,7 @@ public class DbConnection {
 		return resultSet;
 		
 	}
-	
-	
-//LIXO
-	public ArrayList<Difficulty> getListDificuldade() {
-		ArrayList<Difficulty> listaDificuldade = new ArrayList<Difficulty>();
 		
-		try {
-			statement = conn.prepareStatement("SELECT * FROM Nivel_Dificuldade");
-			resultSet = statement.executeQuery();
-			while(resultSet.next()) {
-				String designacaoNivel = resultSet.getString("Designacao_Nivel");
-		//		Difficulty dificuldade = new Difficulty();
-				Difficulty d = new Difficulty(designacaoNivel);
-				listaDificuldade.add(d);
-//				System.out.println(d.getDesignacaoNivel());
-
-			}	
-
-			System.out.println("DB DIFI close?  "+conn.isClosed());
-			conn.close();
-			System.out.println("DB DIFI close? "+conn.isClosed());
-		} catch (SQLException e) {
-				System.err.println("problemas na ligação a base de dados, por favor tente novemente!");
-				e.printStackTrace();
-			}
-	
-			return listaDificuldade;
-			
-		}
 	public void closeStatement(){
 		try {
 			statement.close();
@@ -88,9 +53,4 @@ public class DbConnection {
 		}
 	}
 	
-	//Recolha de dados dos modulos para o construtor do ModuleToSubModuleMap
-	
-	
-	//public Map<String,ArrayList<String>> 
-
 }

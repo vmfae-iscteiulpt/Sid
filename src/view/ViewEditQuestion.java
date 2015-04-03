@@ -1,8 +1,6 @@
 package view;
 								//+//ALTERAR NOMES DE ACORDO COM O MODELO DE CLASSES
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,15 +13,16 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
-import javax.swing.JSlider;
-import javax.swing.JTextPane;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ViewEditQuestion extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
 
