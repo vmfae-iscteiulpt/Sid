@@ -14,33 +14,41 @@ public class ControllerQuestions {
 	private boolean minhaQuestao;  // minhasQuestao no relatorio
 	private Question questaoSelecionada;
 	private LinkedList<Question> listaQuestoes; 
-	private ModuleToSubModuleMap moduleToSubModuleObject; 
-	//private DbConnection dbConnection;  //Adicionada por nós
 	private Docente currentUser;  //Relatorio diz USER
+	private ModuleToSubModuleMap moduleToSubModuleObject= new ModuleToSubModuleMap(currentUser); 
+	//private DbConnection dbConnection;  //Adicionada por nós
+
 	private Difficulty nivel = new Difficulty();  //Não está diagrama no classes..E a classe chama-se Difficult
-	
+
 	public ControllerQuestions(Docente currentUser){  //Relatorio diz USER
 		this.currentUser=currentUser;
 		//dbConnection = new DbConnection();
 	}
+	public String[] loadModulos(){ 
+
+		//	moduleToSubModuleObject = new ModuleToSubModuleMap(currentUser);
+		return moduleToSubModuleObject.getModules();
+
+
+	}
 	public String[] loadSubModulos(String selectedModule){
-		return null;
+		return moduleToSubModuleObject.getSubModules(selectedModule);
 	}
+
+
 	public String[] populateNiveis(){ 	//Dificuldade
-			return nivel.populateNiveis();							
+		return nivel.populateNiveis();							
 	}
-		
-		
-		
-		
-	
+
+
+
 	public LinkedList<Question> aplicarFiltro(String module,String subModule,String nivel,boolean minhaQuestao){ //Diagrama classe tem tbm int texto
 		return null;
 	}
 	public void apagarResposta(Question question){ //  ForceDelete está no diagrama de classes(MVC)...não vai ser necessario
 	}
 	public void verDetalhes(Question question){  //Vai ser necessário receber como parametro uma pergunta
-		
+
 	}
 	public Question getQuestion(String module, String subModule,String nivel,String texto,Docente user ){
 		return null;
@@ -51,9 +59,7 @@ public class ControllerQuestions {
 	public String openStringChanger(){
 		return null;
 	}
-	public String[] loadModulos(){ 
-		return null;
-	}
+
 	public boolean submittChanges(Question question){
 		return false;
 	}
@@ -63,14 +69,14 @@ public class ControllerQuestions {
 	public boolean insertQuestion(String module,String subModule,String nivel,String userEmail,String texto,String explicacao,String link){
 		return false;
 	}
-	
-	
+
+
 	/*
 	public boolean inserirDocente(Docente currentUser) {
 		return database.inserirDocente(currentUser);
-		
+
 	}
-*/	
+	 */	
 	public Docente currentDocente(){
 		currentUser = new Docente();
 		return currentUser.currentDocente();
