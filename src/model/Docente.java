@@ -1,8 +1,5 @@
 package model;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,15 +10,10 @@ public class Docente {
 	private String email;
 	private String nome;
 	private String password;
-
-	
-	//DB 
+	//private ControllerQuestions controller=new ControllerQuestions();
 	private DbConnection dbConnection= new DbConnection();
-	private Connection conn = dbConnection.getConn();
-	private ResultSet resultSet = null;
 	
 	
-	//contrutores
 	public Docente() {
 	}
 	
@@ -32,8 +24,10 @@ public class Docente {
 	//	dbConnection = new DbConnection();
 	}
 	
-	
-	//fim dos construtores
+	public String toString() {
+		return "Docente [email=" + email + ", nome=" + nome 
+				+ "]";
+	}
 
 	public String getEmail() {
 		return email;
@@ -59,34 +53,16 @@ public class Docente {
 		this.nome = nome;
 	}
 	public Docente currentDocente(){ //recebe um docente da base de dados
-		ArrayList<Docente> lista = new ArrayList<Docente>();
-		resultSet=dbConnection.select("SELECT * FROM Docente");
-		try {
-			while(resultSet.next()) {
-				String email = resultSet.getString("Email_Docente");
-				String nome = resultSet.getString("Nome");
-				String password = resultSet.getString("Senha");
-				Docente docente = new Docente(email, nome, password);
-				lista.add(docente);
-				
-			}
-			System.out.println("DB DONCENTE close? NEW "+conn.isClosed());
-			conn.close();
-			System.out.println("DB DONCENTE close?  NEW "+conn.isClosed());
-						
-		} catch (SQLException e) {
-			System.err.println("problemas na ligação a base de dados, por favor tente novemente!");
-			e.printStackTrace();
-		}
+		ArrayList<Docente> listDocente = dbConnection.getListDocentes();
+		
 		Random gerador=new Random();
-		int randomDoncente= gerador.nextInt(lista.size());
-		return lista.get(randomDoncente);
+		int randomDoncente= gerador.nextInt(listDocente.size());
+		return listDocente.get(randomDoncente);
+		
 	}
 	
-	public String toString() {
-		return "Docente [email=" + email + ", nome=" + nome 
-				+ "]";
-	}
+
+	
 	
 	
 }

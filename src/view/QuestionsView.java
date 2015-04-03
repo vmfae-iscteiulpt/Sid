@@ -157,21 +157,17 @@ public class QuestionsView extends JFrame {
 		
 		//JComboBox comboBox_dificuldade = new JComboBox(new Object[] {null, "Muito Fácil", "Fácil",   //Teste com dificuldades
 		  //      "Médio", "Dificil", "Muito Dificil" });
-
+		//AutoCompleteDecorator.decorate(comboBox_dificuldade);
 		
 		
 		JComboBox<String> comboBox_dificuldade= new JComboBox<String>();
 		comboBox_dificuldade.setEditable(true);
 		comboBox_dificuldade.setBounds(547, 42, 113, 22);
 		contentPane.add(comboBox_dificuldade);
-		AutoCompleteDecorator.decorate(comboBox_dificuldade);
-		comboBox_dificuldade.addItem("");
-		String[] populateNiveis = controllerQuestions.populateNiveis(); //Erro estava aqui!!!!
+		for(int i = 0;i<controllerQuestions.populateNiveis().length;i++){
+		comboBox_dificuldade.addItem(controllerQuestions.populateNiveis()[i]);
 		
-		for(int i = 0; i < populateNiveis.length;i++){
-		comboBox_dificuldade.addItem(populateNiveis[i]);
 		}
-		
 		JLabel lblSubmdulo = new JLabel("Sub-Modulo");
 		lblSubmdulo.setBounds(235, 45, 84, 16);
 		contentPane.add(lblSubmdulo);

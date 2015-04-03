@@ -29,6 +29,7 @@ public class Difficulty {
 	
 	public String[]populateNiveis(){ //O PROBLEMA ESTÁ AQUI
 		ArrayList<Difficulty> dif= conn.getListDificuldade();
+		System.out.println(dif.size());
 		String [] dificuldade= new String[dif.size()];
 		
 			for( int i=0;i < dificuldade.length;i++){
