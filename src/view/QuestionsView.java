@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
@@ -21,7 +20,7 @@ import model.Docente;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
+
 
 import controller.ControllerQuestions;
 
@@ -34,10 +33,13 @@ public class QuestionsView extends JFrame {
 	private JTable table;
 	private Docente user;
 	private ControllerQuestions controllerQuestions;
+	private boolean minhaQuestao;
 	
 	private JLabel lblMdulo = new JLabel("Modulo");
 	private JComboBox<String> comboBox_modulo = new JComboBox<String>();
 	private String moduloEscolhido = new String("");
+	private String subModuloEscolhido= new String("");
+	private String nivelDificuldade= new String("");
 
 	private JComboBox<String> comboBox_submodulo = new JComboBox<String>();
 	private	JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
@@ -71,46 +73,7 @@ public class QuestionsView extends JFrame {
 				dispose();
 			}
 		});
-		JButton btnAdicionar = new JButton("Adicionar");
-		btnAdicionar.setBounds(12, 315, 97, 25);
-		contentPane.add(btnAdicionar);
-		btnAdicionar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				InsertQuestionsView teste = new InsertQuestionsView();
-				teste.setVisible(true);
-			}
-		});
-		JButton btnVerDetalhes = new JButton("Ver Detalhes");
-		btnVerDetalhes.setBounds(12, 277, 113, 25);
-		contentPane.add(btnVerDetalhes);
-		btnVerDetalhes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DetailsView details = new DetailsView();
-				details.setVisible(true);
-			}
-		});
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.setEnabled(false);
-		btnEditar.setBounds(135, 277, 97, 25);
-		contentPane.add(btnEditar);
-		JButton btnApagar = new JButton("Apagar");
-		btnApagar.setEnabled(false);
-		btnApagar.setBounds(244, 277, 97, 25);
-		contentPane.add(btnApagar);
-		JButton btnNewButton = new JButton("Minhas Perguntas");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton.setBounds(12, 74, 156, 25);
-		contentPane.add(btnNewButton);
-		JButton btnNewButton_1 = new JButton("Outros Docentes");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_1.setBounds(202, 74, 139, 25);
-		contentPane.add(btnNewButton_1);
+
 
 
 /************* Modulo *************/
@@ -179,6 +142,83 @@ public class QuestionsView extends JFrame {
 		JLabel lblDificuldade = new JLabel("Dificuldade");
 		lblDificuldade.setBounds(462, 45, 73, 16);
 		contentPane.add(lblDificuldade);
+		
+		
+		
+		
+		/* **InICIO BOTÕES*** */
+			
+		
+		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.setBounds(12, 315, 97, 25);
+		contentPane.add(btnAdicionar);
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				InsertQuestionsView teste = new InsertQuestionsView();
+				teste.setVisible(true);
+			}
+		});
+		JButton btnVerDetalhes = new JButton("Ver Detalhes");
+		btnVerDetalhes.setBounds(12, 277, 113, 25);
+		contentPane.add(btnVerDetalhes);
+		btnVerDetalhes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DetailsView details = new DetailsView();
+				details.setVisible(true);
+			}
+		});
+		
+		//editar
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.setEnabled(false);
+		btnEditar.setBounds(135, 277, 97, 25);
+		contentPane.add(btnEditar);
+		
+		//Apagar
+		JButton btnApagar = new JButton("Apagar");
+		btnApagar.setEnabled(false);
+		btnApagar.setBounds(244, 277, 97, 25);
+		contentPane.add(btnApagar);
+		
+		//Minhas Perguntas
+
+		JButton btnMinhasPerguntas = new JButton("Minhas Perguntas");
+		btnMinhasPerguntas.setBounds(12, 74, 156, 25);
+		contentPane.add(btnMinhasPerguntas);
+		btnMinhasPerguntas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//NOTA!! Temos depois de fazer verifiação caso nao tenha todos os campos preenchidos se a string esta a passar null.
+				minhaQuestao=true;
+				subModuloEscolhido= (String) comboBox_submodulo.getSelectedItem();
+				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
+				System.out.println("Minhas perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
+		
+				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, minhaQuestao);
+						
+			}
+		});
+		//End
+		
+		/*******Outros Docentes****/
+		JButton btnPerguntasOutrosDocentes = new JButton("Outros Docentes");
+		btnPerguntasOutrosDocentes.setBounds(202, 74, 139, 25);
+		contentPane.add(btnPerguntasOutrosDocentes);
+		btnPerguntasOutrosDocentes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				minhaQuestao=false;
+				subModuloEscolhido= (String) comboBox_submodulo.getSelectedItem();
+//				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
+				//NOTA!! Temos depois de fazer verifiação caso nao tenha todos os campos preenchidos se a string esta a passar null.
+
+				System.out.println("Minhas Perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
+				
+				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, minhaQuestao);
+
+			}
+		});
+		//end
+		
+		/******Tabela***/
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(22, 112, 633, 151);
 		contentPane.add(scrollPane);
@@ -188,8 +228,12 @@ public class QuestionsView extends JFrame {
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null }, },
-				new String[] { "Modulo", "Sub-Modulo", "Nivel", "Pergunta" }));
+				new String[] { "Modulo", "Sub-Modulo", "Nivel", "Pergunta" 
+				}
+		));
+		//END
 		scrollPane.setViewportView(table);
+
 	}
 
 	

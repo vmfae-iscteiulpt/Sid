@@ -45,11 +45,11 @@ public class ModuleToSubModuleMap {
 				modules.add(m);
 //				System.out.println(m);
 			}
-			System.out.println("DB Modulos close? " + conn.isClosed());
+//			System.out.println("DB Modulos close? " + conn.isClosed());
 
 			dbConnection.closeStatement();
 			conn.close();
-			System.out.println("DB Modulos close? " + conn.isClosed());
+//			System.out.println("DB Modulos close? " + conn.isClosed());
 		} catch (SQLException e) {
 			System.err.println("problemas na ligação a base de dados, por favor tente novemente!");
 			e.printStackTrace();
