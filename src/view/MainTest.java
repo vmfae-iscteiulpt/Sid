@@ -1,15 +1,14 @@
 package view;
 
 import java.awt.EventQueue;
-
-
 import model.Docente;
 import controller.ControllerQuestions;
 
 public class MainTest {
-	private static Docente user;	
-	private static ControllerQuestions controller = new ControllerQuestions(user);
-		
+	private static Docente user;
+	private static ControllerQuestions controller = new ControllerQuestions(
+			user);
+
 	/**
 	 * Launch the application.
 	 */
@@ -26,7 +25,4 @@ public class MainTest {
 			}
 		});
 	}
-
-
-
 }
