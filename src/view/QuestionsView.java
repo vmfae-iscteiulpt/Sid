@@ -40,6 +40,8 @@ public class QuestionsView extends JFrame {
 	private String moduloEscolhido = new String("");
 	private String subModuloEscolhido= new String("");
 	private String nivelDificuldade= new String("");
+	private String pergunta= new String("");
+
 
 	private JComboBox<String> comboBox_submodulo = new JComboBox<String>();
 	private	JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
@@ -51,8 +53,8 @@ public class QuestionsView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public QuestionsView(Docente user) {
-		this.user = user;
+	public QuestionsView(Docente currentUser) {
+		this.user = currentUser;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
@@ -60,7 +62,7 @@ public class QuestionsView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		controllerQuestions = new ControllerQuestions(user);
+		controllerQuestions = new ControllerQuestions(currentUser);
 		JLabel lblDocente = new JLabel("Docente: " + displayCurrentUser());// +
 																			// displayCurrentUser());
 		lblDocente.setBounds(12, 13, 156, 16);
@@ -117,7 +119,7 @@ public class QuestionsView extends JFrame {
 		comboBox_submodulo.setBounds(325, 39, 113, 22);
 		contentPane.add(comboBox_submodulo);
 		AutoCompleteDecorator.decorate(comboBox_submodulo);
-		comboBox_submodulo.addItem("");
+		comboBox_submodulo.addItem(" ");
 
 		//end
 		
@@ -130,7 +132,7 @@ public class QuestionsView extends JFrame {
 																		// estava
 																		// aqui!!!!
 		AutoCompleteDecorator.decorate(comboBox_dificuldade);
-		comboBox_dificuldade.addItem("");
+		comboBox_dificuldade.addItem(" ");
 		for (int i = 0; i < populateNiveis.length; i++) {
 			comboBox_dificuldade.addItem(populateNiveis[i]);
 		}
@@ -193,7 +195,7 @@ public class QuestionsView extends JFrame {
 				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
 				System.out.println("Minhas perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
 		
-				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, minhaQuestao);
+//				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao, currentUser);
 						
 			}
 		});
@@ -207,12 +209,12 @@ public class QuestionsView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				minhaQuestao=false;
 				subModuloEscolhido= (String) comboBox_submodulo.getSelectedItem();
-//				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
-				//NOTA!! Temos depois de fazer verifiação caso nao tenha todos os campos preenchidos se a string esta a passar null.
+				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
+
 
 				System.out.println("Minhas Perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
 				
-				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, minhaQuestao);
+//				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao);
 
 			}
 		});

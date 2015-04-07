@@ -9,23 +9,15 @@ import model.Question;
 public class ControllerQuestions {
 	// private DbConnection
 	private boolean minhaQuestao; // minhasQuestao no relatorio
-	private Question questaoSelecionada;
+	private Question question = new Question();
 	private LinkedList<Question> listaQuestoes;
 	private Docente currentUser; // Relatorio diz USER
-	private ModuleToSubModuleMap moduleToSubModuleObject = new ModuleToSubModuleMap(
-			currentUser);
-	// private DbConnection dbConnection; //Adicionada por nós
-	
-	
-	private Difficulty nivel = new Difficulty(); // Não está diagrama no
-													// classes..E a classe
-													// chama-se Difficult
-
+	private ModuleToSubModuleMap moduleToSubModuleObject = new ModuleToSubModuleMap(currentUser);
+	private Difficulty nivel = new Difficulty(); // Não está diagrama no classes..E a classe chama-se Difficult
 	
 	
 	public ControllerQuestions(Docente currentUser) { // Relatorio diz USER
 		this.currentUser = currentUser;
-		// dbConnection = new DbConnection();
 	}
 
 	public String[] loadModulos() {
@@ -40,21 +32,15 @@ public class ControllerQuestions {
 		return nivel.populateNiveis();
 	}
 
-	public LinkedList<Question> aplicarFiltro(String module, String subModule,
-			String nivel, boolean minhaQuestao) { // Diagrama classe tem tbm int
-													// texto
-		return null;
+	public LinkedList<Question> aplicarFiltro(String module,String subModule, String nivel, boolean minhaQuestao){ //Diagrama classe tem tbm int texto
+		listaQuestoes = question.aplicarFiltro(module, subModule, nivel, minhaQuestao, currentUser);
+		return listaQuestoes;
 	}
 
-	public void apagarResposta(Question question) { // ForceDelete está no
-													// diagrama de
-													// classes(MVC)...não vai
-													// ser necessario
+	public void apagarResposta(Question question) { // ForceDelete está no diagrama de classes(MVC)...não vai ser necessario
 	}
 
-	public void verDetalhes(Question question) { // Vai ser necessário receber
-													// como parametro uma
-													// pergunta
+	public void verDetalhes(Question question) { // Vai ser necessário receber  como parametro uma pergunta
 	}
 
 	public Question getQuestion(String module, String subModule, String nivel,
