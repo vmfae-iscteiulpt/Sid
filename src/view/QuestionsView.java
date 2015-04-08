@@ -220,16 +220,22 @@ public class QuestionsView extends JFrame {
 				System.out.println("Minhas Perguntas? " + minhaQuestao + " "
 						+ moduloEscolhido + " " + subModuloEscolhido + " "
 						+ nivelDificuldade);
-
+				
 				Question q;
 				LinkedList<Question> qst = controllerQuestions.aplicarFiltro(moduloEscolhido,
 						subModuloEscolhido, nivelDificuldade, minhaQuestao,
 						currentUser);
+				
+				for (int i = 0; i < dtm.getRowCount(); i++) {
+					dtm.removeRow(i);
+					dtm.fireTableDataChanged();
+				}
+				contador =0;
 				for (int i = 0; i < qst.size(); i++) {
 					q= qst.get(i);
 					carregarDados(q);
 				}
-
+				System.out.println("Temos "+dtm.getRowCount());
 			}
 		});
 		// end
@@ -265,7 +271,13 @@ public class QuestionsView extends JFrame {
 	public void carregarInterfazTabela(){
 		String[][] x = {};
 		String[] Colunas ={"Módulo" , "Sub-Modulo", "Nivel", "Pergunta"};
-		dtm = new DefaultTableModel(x, Colunas) ;
+		dtm = new DefaultTableModel(x, Colunas)
+	    {  
+	        @Override  
+	        public boolean isCellEditable(final int row, final int column) {  
+	            return false;  
+	        }  
+	    };
 		tableData.setModel(dtm);
 	}
 	

@@ -19,7 +19,7 @@ public class Question {
 	private int id;
 	private DbConnection dbconn;
 	private Connection conn;
-	private LinkedList<Question> listaQuestions = new LinkedList<Question>();
+	private LinkedList<Question> listaQuestions;
 
 
 	public Question(String modulo, String subModulo, String nivel, String pergunta,
@@ -41,6 +41,7 @@ public class Question {
 	public LinkedList<Question> aplicarFiltro(String modulo, String subModulo, String nivelQuestion, boolean minhaQuestao, Docente currentUser) {
 		dbconn = new DbConnection();
 		conn = dbconn.getConn();
+		listaQuestions = new LinkedList<Question>();
 
 		try {
 			ResultSet resultSetNivel = dbconn.select("SELECT ID_Nivel FROM Nivel_Dificuldade WHERE Designacao_Nivel="+"'"+nivelQuestion+"'");
@@ -207,6 +208,9 @@ public class Question {
 		
 		
 	}
+	
+
+
 	
 	@Override
 	public String toString() {
