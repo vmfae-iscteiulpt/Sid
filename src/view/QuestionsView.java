@@ -41,10 +41,12 @@ public class QuestionsView extends JFrame {
 	private String subModuloEscolhido = new String("");
 	private String nivelDificuldade = new String("");
 	private String pergunta = new String("");
-
+	private JButton btnAdicionar;
+	private JButton btnEditar;
+	private JButton btnApagar;
 	private JComboBox<String> comboBox_submodulo = new JComboBox<String>();
 	private JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
-	private LinkedList<Question> listQuestions = new LinkedList<Question>();
+	private LinkedList<Question> listQuestions;
 	private String[] vetorModulos;
 	DefaultTableModel dtm;
 	int contador=0;
@@ -149,7 +151,7 @@ public class QuestionsView extends JFrame {
 
 		/* **InICIO BOTÕES*** */
 
-		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(12, 315, 97, 25);
 		contentPane.add(btnAdicionar);
 		btnAdicionar.addActionListener(new ActionListener() {
@@ -169,13 +171,13 @@ public class QuestionsView extends JFrame {
 		});
 
 		// editar
-		JButton btnEditar = new JButton("Editar");
+		btnEditar = new JButton("Editar");
 		btnEditar.setEnabled(false);
 		btnEditar.setBounds(135, 277, 97, 25);
 		contentPane.add(btnEditar);
 
 		// Apagar
-		JButton btnApagar = new JButton("Apagar");
+		btnApagar = new JButton("Apagar");
 		btnApagar.setEnabled(false);
 		btnApagar.setBounds(244, 277, 97, 25);
 		contentPane.add(btnApagar);
@@ -190,6 +192,8 @@ public class QuestionsView extends JFrame {
 				// NOTA!! Temos depois de fazer verifiação caso nao tenha todos
 				// os campos preenchidos se a string esta a passar null.
 				minhaQuestao = true;
+				btnEditar.setEnabled(minhaQuestao);
+				btnApagar.setEnabled(minhaQuestao);
 				subModuloEscolhido = (String) comboBox_submodulo
 						.getSelectedItem();
 				nivelDificuldade = (String) comboBox_dificuldade
@@ -198,10 +202,22 @@ public class QuestionsView extends JFrame {
 						+ moduloEscolhido + " " + subModuloEscolhido + " "
 						+ nivelDificuldade);
 
-				// controllerQuestions.aplicarFiltro(moduloEscolhido,
-				// subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao,
-				// currentUser);
-
+				Question q;
+//				LinkedList<Question> 
+				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
+						subModuloEscolhido, nivelDificuldade, minhaQuestao,
+						currentUser);
+				
+				for (int i = 0; i < dtm.getRowCount(); i++) {
+					dtm.removeRow(i);
+					dtm.fireTableDataChanged();
+				}
+				contador =0;
+				for (int i = 0; i < listQuestions.size(); i++) {
+					q= listQuestions.get(i);
+					carregarDados(q);
+				}
+				System.out.println("Temos "+dtm.getRowCount());
 			}
 		});
 		// End
@@ -213,6 +229,8 @@ public class QuestionsView extends JFrame {
 		btnPerguntasOutrosDocentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				minhaQuestao = false;
+				btnEditar.setEnabled(minhaQuestao);
+				btnApagar.setEnabled(minhaQuestao);
 				moduloEscolhido = (String) comboBox_modulo.getSelectedItem();
 				subModuloEscolhido = (String) comboBox_submodulo.getSelectedItem();
 				nivelDificuldade = (String) comboBox_dificuldade.getSelectedItem();
@@ -222,7 +240,8 @@ public class QuestionsView extends JFrame {
 						+ nivelDificuldade);
 				
 				Question q;
-				LinkedList<Question> qst = controllerQuestions.aplicarFiltro(moduloEscolhido,
+//				LinkedList<Question> 
+				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
 						subModuloEscolhido, nivelDificuldade, minhaQuestao,
 						currentUser);
 				
@@ -231,8 +250,8 @@ public class QuestionsView extends JFrame {
 					dtm.fireTableDataChanged();
 				}
 				contador =0;
-				for (int i = 0; i < qst.size(); i++) {
-					q= qst.get(i);
+				for (int i = 0; i < listQuestions.size(); i++) {
+					q= listQuestions.get(i);
 					carregarDados(q);
 				}
 				System.out.println("Temos "+dtm.getRowCount());
@@ -268,6 +287,7 @@ public class QuestionsView extends JFrame {
 		}
 	}
 	
+	@SuppressWarnings("serial")
 	public void carregarInterfazTabela(){
 		String[][] x = {};
 		String[] Colunas ={"Módulo" , "Sub-Modulo", "Nivel", "Pergunta"};
