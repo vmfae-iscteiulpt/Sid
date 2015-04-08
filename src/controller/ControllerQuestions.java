@@ -32,8 +32,8 @@ public class ControllerQuestions {
 		return nivel.populateNiveis();
 	}
 
-	public LinkedList<Question> aplicarFiltro(String module,String subModule, String nivel, boolean minhaQuestao){ //Diagrama classe tem tbm int texto
-		listaQuestoes = question.aplicarFiltro(module, subModule, nivel, minhaQuestao, currentUser);
+	public LinkedList<Question> aplicarFiltro(String module,String subModule, String nivel, boolean minhaQuestao, Docente user){ //Diagrama classe tem tbm int texto
+		listaQuestoes = question.aplicarFiltro(module, subModule, nivel, minhaQuestao, user);
 		return listaQuestoes;
 	}
 

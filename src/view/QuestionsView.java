@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.LinkedList;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -17,10 +18,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
 import model.Docente;
+import model.Question;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
-
 
 import controller.ControllerQuestions;
 
@@ -30,22 +30,24 @@ public class QuestionsView extends JFrame {
 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
-	private Docente user;
+	private JTable tableData = new JTable();
+	private Docente currentUser;
 	private ControllerQuestions controllerQuestions;
 	private boolean minhaQuestao;
-	
+
 	private JLabel lblMdulo = new JLabel("Modulo");
 	private JComboBox<String> comboBox_modulo = new JComboBox<String>();
 	private String moduloEscolhido = new String("");
-	private String subModuloEscolhido= new String("");
-	private String nivelDificuldade= new String("");
-	private String pergunta= new String("");
-
+	private String subModuloEscolhido = new String("");
+	private String nivelDificuldade = new String("");
+	private String pergunta = new String("");
 
 	private JComboBox<String> comboBox_submodulo = new JComboBox<String>();
-	private	JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
+	private JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
+	private LinkedList<Question> listQuestions = new LinkedList<Question>();
 	private String[] vetorModulos;
+	DefaultTableModel dtm;
+	int contador=0;
 
 	/**
 	 * Launch the application.
@@ -53,8 +55,8 @@ public class QuestionsView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public QuestionsView(Docente currentUser) {
-		this.user = currentUser;
+	public QuestionsView(final Docente currentUser) {
+		this.currentUser = currentUser;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
@@ -76,13 +78,11 @@ public class QuestionsView extends JFrame {
 			}
 		});
 
+		/************* Modulo *************/
 
-
-/************* Modulo *************/
-		
 		lblMdulo.setBounds(12, 45, 56, 16);
 		contentPane.add(lblMdulo);
-		//ComboBox Modulo
+		// ComboBox Modulo
 		comboBox_modulo.setEditable(true);
 		comboBox_modulo.setBounds(84, 42, 120, 22);
 		contentPane.add(comboBox_modulo);
@@ -94,36 +94,38 @@ public class QuestionsView extends JFrame {
 		}
 
 		comboBox_modulo.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if(comboBox_modulo.getSelectedItem().equals(" ")) {
+				if (comboBox_modulo.getSelectedItem().equals(" ")) {
 					System.out.println("nenhum modulo esolhido!");
 					comboBox_submodulo.removeAllItems();
-				}else{
-//					System.out.println((comboBox_submodulo.getSelectedItem()));					
+					comboBox_submodulo.addItem(" ");
+				} else {
+					// System.out.println((comboBox_submodulo.getSelectedItem()));
 					for (int i = 0; i < vetorModulos.length; i++) {
-						if (comboBox_modulo.getSelectedItem().equals(vetorModulos[i])) {
+						if (comboBox_modulo.getSelectedItem().equals(
+								vetorModulos[i])) {
 							moduloEscolhido = vetorModulos[i];
-							preencherSubModulo(comboBox_submodulo, moduloEscolhido);
+							preencherSubModulo(comboBox_submodulo,
+									moduloEscolhido);
 						}
 					}
 				}
-				
+
 			}
 		});
-		//end
-		
-		//comboBox Submodulo
+		// end
+
+		// comboBox Submodulo
 		comboBox_submodulo.setEditable(true);
 		comboBox_submodulo.setBounds(325, 39, 113, 22);
 		contentPane.add(comboBox_submodulo);
 		AutoCompleteDecorator.decorate(comboBox_submodulo);
 		comboBox_submodulo.addItem(" ");
 
-		//end
-		
-		
+		// end
+
 		// COMBOBOX NIVEL DIFICULDADE
 		comboBox_dificuldade.setEditable(true);
 		comboBox_dificuldade.setBounds(547, 42, 113, 22);
@@ -136,21 +138,17 @@ public class QuestionsView extends JFrame {
 		for (int i = 0; i < populateNiveis.length; i++) {
 			comboBox_dificuldade.addItem(populateNiveis[i]);
 		}
-		//END 
-		
+		// END
+
 		JLabel lblSubmdulo = new JLabel("Sub-Modulo");
 		lblSubmdulo.setBounds(235, 45, 84, 16);
 		contentPane.add(lblSubmdulo);
 		JLabel lblDificuldade = new JLabel("Dificuldade");
 		lblDificuldade.setBounds(462, 45, 73, 16);
 		contentPane.add(lblDificuldade);
-		
-		
-		
-		
+
 		/* **InICIO BOTÕES*** */
-			
-		
+
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(12, 315, 97, 25);
 		contentPane.add(btnAdicionar);
@@ -169,91 +167,114 @@ public class QuestionsView extends JFrame {
 				details.setVisible(true);
 			}
 		});
-		
-		//editar
+
+		// editar
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setEnabled(false);
 		btnEditar.setBounds(135, 277, 97, 25);
 		contentPane.add(btnEditar);
-		
-		//Apagar
+
+		// Apagar
 		JButton btnApagar = new JButton("Apagar");
 		btnApagar.setEnabled(false);
 		btnApagar.setBounds(244, 277, 97, 25);
 		contentPane.add(btnApagar);
-		
-		//Minhas Perguntas
+
+		// Minhas Perguntas
 
 		JButton btnMinhasPerguntas = new JButton("Minhas Perguntas");
 		btnMinhasPerguntas.setBounds(12, 74, 156, 25);
 		contentPane.add(btnMinhasPerguntas);
 		btnMinhasPerguntas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//NOTA!! Temos depois de fazer verifiação caso nao tenha todos os campos preenchidos se a string esta a passar null.
-				minhaQuestao=true;
-				subModuloEscolhido= (String) comboBox_submodulo.getSelectedItem();
-				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
-				System.out.println("Minhas perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
-		
-//				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao, currentUser);
-						
+				// NOTA!! Temos depois de fazer verifiação caso nao tenha todos
+				// os campos preenchidos se a string esta a passar null.
+				minhaQuestao = true;
+				subModuloEscolhido = (String) comboBox_submodulo
+						.getSelectedItem();
+				nivelDificuldade = (String) comboBox_dificuldade
+						.getSelectedItem();
+				System.out.println("Minhas perguntas? " + minhaQuestao + " "
+						+ moduloEscolhido + " " + subModuloEscolhido + " "
+						+ nivelDificuldade);
+
+				// controllerQuestions.aplicarFiltro(moduloEscolhido,
+				// subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao,
+				// currentUser);
+
 			}
 		});
-		//End
-		
-		/*******Outros Docentes****/
+		// End
+
+		/******* Outros Docentes ****/
 		JButton btnPerguntasOutrosDocentes = new JButton("Outros Docentes");
 		btnPerguntasOutrosDocentes.setBounds(202, 74, 139, 25);
 		contentPane.add(btnPerguntasOutrosDocentes);
 		btnPerguntasOutrosDocentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				minhaQuestao=false;
-				subModuloEscolhido= (String) comboBox_submodulo.getSelectedItem();
-				nivelDificuldade= (String) comboBox_dificuldade.getSelectedItem();
+				minhaQuestao = false;
+				moduloEscolhido = (String) comboBox_modulo.getSelectedItem();
+				subModuloEscolhido = (String) comboBox_submodulo.getSelectedItem();
+				nivelDificuldade = (String) comboBox_dificuldade.getSelectedItem();
 
+				System.out.println("Minhas Perguntas? " + minhaQuestao + " "
+						+ moduloEscolhido + " " + subModuloEscolhido + " "
+						+ nivelDificuldade);
 
-				System.out.println("Minhas Perguntas? " + minhaQuestao +" "+ moduloEscolhido + " "+subModuloEscolhido + " " + nivelDificuldade);
-				
-//				controllerQuestions.aplicarFiltro(moduloEscolhido, subModuloEscolhido, nivelDificuldade, pergunta, minhaQuestao);
+				Question q;
+				LinkedList<Question> qst = controllerQuestions.aplicarFiltro(moduloEscolhido,
+						subModuloEscolhido, nivelDificuldade, minhaQuestao,
+						currentUser);
+				for (int i = 0; i < qst.size(); i++) {
+					q= qst.get(i);
+					carregarDados(q);
+				}
 
 			}
 		});
-		//end
-		
-		/******Tabela***/
+		// end
+
+		/****** Tabela ***/
+		carregarInterfazTabela();
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(22, 112, 633, 151);
 		contentPane.add(scrollPane);
-		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] {
-				{ null, null, null, null }, { null, null, null, null },
-				{ null, null, null, null }, { null, null, null, null },
-				{ null, null, null, null }, { null, null, null, null },
-				{ null, null, null, null }, { null, null, null, null }, },
-				new String[] { "Modulo", "Sub-Modulo", "Nivel", "Pergunta" 
-				}
-		));
-		//END
-		scrollPane.setViewportView(table);
+		tableData.setAutoscrolls(true);
+		scrollPane.setViewportView(tableData);
 
 	}
 
-	
-	
 	// Métodos---Não está no diagrama sequencia.
 	private String displayCurrentUser() {
-		System.out.println(user); // No relatorio está VOID
+		System.out.println(currentUser); // No relatorio está VOID
 		// System.out.println(user.hashCode());
-		return user.getNome(); // fazer random para escolher um Docente qualquer
+		return currentUser.getNome(); // fazer random para escolher um Docente
+										// qualquer
 	}
 
 	public void preencherSubModulo(JComboBox<String> comboBox, String modulo) {
 		comboBox.removeAllItems();
-		comboBox.addItem("");
+		comboBox.addItem(" ");
 		String[] subModulosEscolhidos = controllerQuestions
 				.loadSubModulos(modulo);
 		for (int i = 0; i < subModulosEscolhidos.length; i++) {
 			comboBox_submodulo.addItem(subModulosEscolhidos[i]);
 		}
+	}
+	
+	public void carregarInterfazTabela(){
+		String[][] x = {};
+		String[] Colunas ={"Módulo" , "Sub-Modulo", "Nivel", "Pergunta"};
+		dtm = new DefaultTableModel(x, Colunas) ;
+		tableData.setModel(dtm);
+	}
+	
+	public void carregarDados(Question q){
+		dtm.insertRow(contador, new Object[]{});
+		dtm.setValueAt(q.getModulo(), contador, 0);
+		dtm.setValueAt(q.getSubModulo(), contador, 1);
+		dtm.setValueAt(q.getNivel(), contador, 2);
+		dtm.setValueAt(q.getPergunta(), contador, 3);
+		contador++;
 	}
 }

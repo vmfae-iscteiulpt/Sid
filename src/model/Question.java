@@ -166,10 +166,44 @@ public class Question {
 		return false;
 	}
 	
+	
+	
+	public String getModulo() {
+		return modulo;
+	}
+
+	public void setModulo(String modulo) {
+		this.modulo = modulo;
+	}
+
+	public String getSubModulo() {
+		return subModulo;
+	}
+
+	public void setSubModulo(String subModulo) {
+		this.subModulo = subModulo;
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public String getPergunta() {
+		return pergunta;
+	}
+
+	public void setPergunta(String pergunta) {
+		this.pergunta = pergunta;
+	}
+
 	public static void main(String[] args) {
 		Question q = new Question();
 		Docente d = new Docente("victor@iscte.pt", "Victor", "Victor");
-		q.aplicarFiltro("Portugues", "Lusiadas", " ", true, d);
+		q.aplicarFiltro("Portugues", " ", " ", false, d);
 		
 		
 	}
