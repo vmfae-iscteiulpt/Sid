@@ -1,9 +1,11 @@
-package model;
+package view;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+
+import model.Question;
 
 public class QuestionsTableModel extends AbstractTableModel {
 	//Lista de Questions

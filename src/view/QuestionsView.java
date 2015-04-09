@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 
 import model.Docente;
 import model.Question;
-import model.QuestionsTableModel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
