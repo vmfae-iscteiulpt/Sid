@@ -278,30 +278,6 @@ public class QuestionsView extends JFrame {
 	}
 
 
-        	
-
-	
-	
-	private QuestionsTableModel getTableModel() {
-        if (questionTableModel == null) {
-            questionTableModel = new QuestionsTableModel(criaQuestion());
-        }
-        return questionTableModel;
-	}
-
-	private List<Question> criaQuestion() {
-		List<Question> questions= new LinkedList<Question>();
-		for (int i = 0; i < 5; i++) {
-			Question q = new Question();
-			q.setModulo("Portugues");
-			q.setSubModulo("Lusiadas edicao " +i);
-			q.setNivel("Facil");
-			q.setPergunta("O que é mais relevante na edicão " +i);
-			questions.add(q);
-			
-		}
-		return questions;
-	}
 
 	// Métodos---Não está no diagrama sequencia.
 	private String displayCurrentUser() {
