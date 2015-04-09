@@ -3,6 +3,9 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
@@ -10,15 +13,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
 
 import model.Docente;
 import model.Question;
+import model.QuestionsTableModel;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -30,10 +36,12 @@ public class QuestionsView extends JFrame {
 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tableData = new JTable();
 	private Docente currentUser;
 	private ControllerQuestions controllerQuestions;
 	private boolean minhaQuestao;
+	
+	private JTable tableData = new JTable();
+	private  QuestionsTableModel questionTableModel = new QuestionsTableModel();
 
 	private JLabel lblMdulo = new JLabel("Modulo");
 	private JComboBox<String> comboBox_modulo = new JComboBox<String>();
@@ -181,6 +189,32 @@ public class QuestionsView extends JFrame {
 		btnApagar.setEnabled(false);
 		btnApagar.setBounds(244, 277, 97, 25);
 		contentPane.add(btnApagar);
+		
+		
+/****** Tabela ***/
+//		carregarInterfazTabela();
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(22, 112, 633, 151);
+		contentPane.add(scrollPane);
+		tableData.setAutoscrolls(true);
+		scrollPane.setViewportView(tableData);
+//		tableData.setModel(getTableModel());
+		tableData.setModel(questionTableModel);
+		
+//		tableData.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//			
+//			@Override
+//			public void valueChanged(ListSelectionEvent e) {
+//				
+//				if((tableData.getSelectedRow()==-1))
+//						return;
+//				else
+//					System.out.println(tableData.getValueAt(tableData.getSelectedRow(), 1).toString());
+//			}
+//		});
+		//END
+
+		
 
 		// Minhas Perguntas
 
@@ -201,23 +235,12 @@ public class QuestionsView extends JFrame {
 				System.out.println("Minhas perguntas? " + minhaQuestao + " "
 						+ moduloEscolhido + " " + subModuloEscolhido + " "
 						+ nivelDificuldade);
-
-				Question q;
-//				LinkedList<Question> 
+				
 				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
 						subModuloEscolhido, nivelDificuldade, minhaQuestao,
 						currentUser);
-				
-				for (int i = 0; i < dtm.getRowCount(); i++) {
-					dtm.removeRow(i);
-					dtm.fireTableDataChanged();
-				}
-				contador =0;
-				for (int i = 0; i < listQuestions.size(); i++) {
-					q= listQuestions.get(i);
-					carregarDados(q);
-				}
-				System.out.println("Temos "+dtm.getRowCount());
+				questionTableModel.limpar();
+				questionTableModel.addListaDeQuestion(listQuestions);
 			}
 		});
 		// End
@@ -239,34 +262,45 @@ public class QuestionsView extends JFrame {
 						+ moduloEscolhido + " " + subModuloEscolhido + " "
 						+ nivelDificuldade);
 				
-				Question q;
-//				LinkedList<Question> 
 				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
 						subModuloEscolhido, nivelDificuldade, minhaQuestao,
 						currentUser);
+				questionTableModel.limpar();
+				questionTableModel.addListaDeQuestion(listQuestions);
 				
-				for (int i = 0; i < dtm.getRowCount(); i++) {
-					dtm.removeRow(i);
-					dtm.fireTableDataChanged();
-				}
-				contador =0;
-				for (int i = 0; i < listQuestions.size(); i++) {
-					q= listQuestions.get(i);
-					carregarDados(q);
-				}
-				System.out.println("Temos "+dtm.getRowCount());
+				
 			}
 		});
 		// end
 
-		/****** Tabela ***/
-		carregarInterfazTabela();
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 112, 633, 151);
-		contentPane.add(scrollPane);
-		tableData.setAutoscrolls(true);
-		scrollPane.setViewportView(tableData);
 
+
+	}
+
+
+        	
+
+	
+	
+	private QuestionsTableModel getTableModel() {
+        if (questionTableModel == null) {
+            questionTableModel = new QuestionsTableModel(criaQuestion());
+        }
+        return questionTableModel;
+	}
+
+	private List<Question> criaQuestion() {
+		List<Question> questions= new LinkedList<Question>();
+		for (int i = 0; i < 5; i++) {
+			Question q = new Question();
+			q.setModulo("Portugues");
+			q.setSubModulo("Lusiadas edicao " +i);
+			q.setNivel("Facil");
+			q.setPergunta("O que é mais relevante na edicão " +i);
+			questions.add(q);
+			
+		}
+		return questions;
 	}
 
 	// Métodos---Não está no diagrama sequencia.
@@ -276,7 +310,7 @@ public class QuestionsView extends JFrame {
 		return currentUser.getNome(); // fazer random para escolher um Docente
 										// qualquer
 	}
-
+	
 	public void preencherSubModulo(JComboBox<String> comboBox, String modulo) {
 		comboBox.removeAllItems();
 		comboBox.addItem(" ");
@@ -309,4 +343,6 @@ public class QuestionsView extends JFrame {
 		dtm.setValueAt(q.getPergunta(), contador, 3);
 		contador++;
 	}
+	
+	
 }
