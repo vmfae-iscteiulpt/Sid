@@ -8,6 +8,10 @@ import javax.swing.table.AbstractTableModel;
 import model.Question;
 
 public class QuestionsTableModel extends AbstractTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//Lista de Questions
 	private List<Question> linhasQuestions;
 	//array com os nome das colunas

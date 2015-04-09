@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.LinkedList;
+
+import view.DetailsView;
 import model.Difficulty;
 import model.Docente;
 import model.ModuleToSubModuleMap;
@@ -33,6 +35,8 @@ public class ControllerQuestions {
 	}
 
 	public LinkedList<Question> aplicarFiltro(String module,String subModule, String nivel, boolean minhaQuestao, Docente user){ //Diagrama classe tem tbm int texto
+		System.out.println(module+ subModule+ nivel+ minhaQuestao+ user);
+		
 		listaQuestoes = question.aplicarFiltro(module, subModule, nivel, minhaQuestao, user);
 		return listaQuestoes;
 	}
@@ -40,12 +44,17 @@ public class ControllerQuestions {
 	public void apagarResposta(Question question) { // ForceDelete está no diagrama de classes(MVC)...não vai ser necessario
 	}
 
-	public void verDetalhes(Question question) { // Vai ser necessário receber  como parametro uma pergunta
+	public void verDetalhes() { // Vai ser necessário receber  como parametro uma pergunta
 	}
 
-	public Question getQuestion(String module, String subModule, String nivel,
-			String texto, Docente user) {
-		return null;
+	/*en vez de criar uma NOVA instancia da pergunta com todos os parametros (String module, String subModule, String nivel,
+	String texto, String explicacao, int respostas, String link, Docente user), 
+	podemos manter a instancia da mesma pergunta passada no paramentro, e provalvemente deveria ser um procedimento...
+	*/
+	public Question getQuestion(Question questionSelected, Docente user) {
+		DetailsView  detailView = new DetailsView(questionSelected, user);//
+		detailView.setVisible(true);
+		return questionSelected;
 	}
 
 	public boolean isUserQuestion(String module, String subModule,

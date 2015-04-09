@@ -3,31 +3,22 @@ package view;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
-import java.util.List;
-
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
-
 import model.Docente;
 import model.Question;
-
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import controller.ControllerQuestions;
+
+
 
 public class QuestionsView extends JFrame {
 	/**
@@ -35,7 +26,7 @@ public class QuestionsView extends JFrame {
 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Docente currentUser;
+	private Docente user;
 	private ControllerQuestions controllerQuestions;
 	private boolean minhaQuestao;
 	
@@ -47,7 +38,6 @@ public class QuestionsView extends JFrame {
 	private String moduloEscolhido = new String("");
 	private String subModuloEscolhido = new String("");
 	private String nivelDificuldade = new String("");
-	private String pergunta = new String("");
 	private JButton btnAdicionar;
 	private JButton btnEditar;
 	private JButton btnApagar;
@@ -55,8 +45,7 @@ public class QuestionsView extends JFrame {
 	private JComboBox<String> comboBox_dificuldade = new JComboBox<String>();
 	private LinkedList<Question> listQuestions;
 	private String[] vetorModulos;
-	DefaultTableModel dtm;
-	int contador=0;
+	private Question questionSelected;
 
 	/**
 	 * Launch the application.
@@ -64,8 +53,8 @@ public class QuestionsView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public QuestionsView(final Docente currentUser) {
-		this.currentUser = currentUser;
+	public QuestionsView(Docente currentUser) {
+		this.user = currentUser;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
@@ -74,24 +63,18 @@ public class QuestionsView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		controllerQuestions = new ControllerQuestions(currentUser);
-		JLabel lblDocente = new JLabel("Docente: " + displayCurrentUser());// +
-																			// displayCurrentUser());
+
+
+
+/********************************* **Inicio JLabel e JComboBox** ******************************************/
+
+		JLabel lblDocente = new JLabel("Docente: " + displayCurrentUser());// displayCurrentUser());
 		lblDocente.setBounds(12, 13, 156, 16);
 		contentPane.add(lblDocente);
-		JButton btnFechar = new JButton("Sair");
-		btnFechar.setBounds(573, 315, 97, 25);
-		contentPane.add(btnFechar);
-		btnFechar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				dispose();
-			}
-		});
-
-		/************* Modulo *************/
-
+		
+// ComboBox Modulo
 		lblMdulo.setBounds(12, 45, 56, 16);
 		contentPane.add(lblMdulo);
-		// ComboBox Modulo
 		comboBox_modulo.setEditable(true);
 		comboBox_modulo.setBounds(84, 42, 120, 22);
 		contentPane.add(comboBox_modulo);
@@ -121,33 +104,29 @@ public class QuestionsView extends JFrame {
 						}
 					}
 				}
-
 			}
 		});
-		// end
+// end
 
-		// comboBox Submodulo
+// comboBox Submodulo
 		comboBox_submodulo.setEditable(true);
 		comboBox_submodulo.setBounds(325, 39, 113, 22);
 		contentPane.add(comboBox_submodulo);
 		AutoCompleteDecorator.decorate(comboBox_submodulo);
 		comboBox_submodulo.addItem(" ");
+// end
 
-		// end
-
-		// COMBOBOX NIVEL DIFICULDADE
+// COMBOBOX NIVEL DIFICULDADE
 		comboBox_dificuldade.setEditable(true);
 		comboBox_dificuldade.setBounds(547, 42, 113, 22);
 		contentPane.add(comboBox_dificuldade);
-		String[] populateNiveis = controllerQuestions.populateNiveis(); // Erro
-																		// estava
-																		// aqui!!!!
+		String[] populateNiveis = controllerQuestions.populateNiveis();
 		AutoCompleteDecorator.decorate(comboBox_dificuldade);
 		comboBox_dificuldade.addItem(" ");
 		for (int i = 0; i < populateNiveis.length; i++) {
 			comboBox_dificuldade.addItem(populateNiveis[i]);
 		}
-		// END
+// END
 
 		JLabel lblSubmdulo = new JLabel("Sub-Modulo");
 		lblSubmdulo.setBounds(235, 45, 84, 16);
@@ -155,9 +134,20 @@ public class QuestionsView extends JFrame {
 		JLabel lblDificuldade = new JLabel("Dificuldade");
 		lblDificuldade.setBounds(462, 45, 73, 16);
 		contentPane.add(lblDificuldade);
+/********************************* **END JLabel e JComboBox** ******************************************/
 
-		/* **InICIO BOTÕES*** */
+		
+/********************************* **Inicio JTable** ******************************************/
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(22, 112, 633, 151);
+		contentPane.add(scrollPane);
+		tableData.setAutoscrolls(true);
+		scrollPane.setViewportView(tableData);
+		tableData.setModel(questionTableModel);
+/********************************* **END JTable** ******************************************/
 
+/********************************* **INICIO BOTÕES** ******************************************/
+//botão adicionar
 		btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(12, 315, 97, 25);
 		contentPane.add(btnAdicionar);
@@ -167,87 +157,95 @@ public class QuestionsView extends JFrame {
 				teste.setVisible(true);
 			}
 		});
+//End
+		
+// Botão Ver detalhes
 		JButton btnVerDetalhes = new JButton("Ver Detalhes");
 		btnVerDetalhes.setBounds(12, 277, 113, 25);
 		contentPane.add(btnVerDetalhes);
+		
 		btnVerDetalhes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DetailsView details = new DetailsView();
-				details.setVisible(true);
-			}
-		});
+	
+				if(openWindows(questionTableModel.getRowCount(), tableData.getSelectedRow())){
+					questionSelected= questionTableModel.getQuestion(tableData.getSelectedRow());
+					verDetalhe();
 
-		// editar
+				}
+			}
+
+
+		});
+// END
+
+// Botão editar
 		btnEditar = new JButton("Editar");
 		btnEditar.setEnabled(false);
 		btnEditar.setBounds(135, 277, 97, 25);
 		contentPane.add(btnEditar);
-
-		// Apagar
+		
+		btnEditar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(openWindows(questionTableModel.getRowCount(), tableData.getSelectedRow())){
+					ViewEditQuestion viewEdit = new ViewEditQuestion();
+					viewEdit.setVisible(true);
+				}
+			}
+		});
+//end
+		
+// Botão apagar
 		btnApagar = new JButton("Apagar");
 		btnApagar.setEnabled(false);
 		btnApagar.setBounds(244, 277, 97, 25);
 		contentPane.add(btnApagar);
+//end
 		
-		
-/****** Tabela ***/
-//		carregarInterfazTabela();
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(22, 112, 633, 151);
-		contentPane.add(scrollPane);
-		tableData.setAutoscrolls(true);
-		scrollPane.setViewportView(tableData);
-//		tableData.setModel(getTableModel());
-		tableData.setModel(questionTableModel);
-		
-//		tableData.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//			
-//			@Override
-//			public void valueChanged(ListSelectionEvent e) {
-//				
-//				if((tableData.getSelectedRow()==-1))
-//						return;
-//				else
-//					System.out.println(tableData.getValueAt(tableData.getSelectedRow(), 1).toString());
-//			}
-//		});
-		//END
-
-		
-
-		// Minhas Perguntas
-
+// Minhas Perguntas
 		JButton btnMinhasPerguntas = new JButton("Minhas Perguntas");
 		btnMinhasPerguntas.setBounds(12, 74, 156, 25);
 		contentPane.add(btnMinhasPerguntas);
+		
 		btnMinhasPerguntas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// NOTA!! Temos depois de fazer verifiação caso nao tenha todos
 				// os campos preenchidos se a string esta a passar null.
 				minhaQuestao = true;
-				btnEditar.setEnabled(minhaQuestao);
-				btnApagar.setEnabled(minhaQuestao);
 				subModuloEscolhido = (String) comboBox_submodulo
 						.getSelectedItem();
 				nivelDificuldade = (String) comboBox_dificuldade
 						.getSelectedItem();
+				moduloEscolhido = (String) comboBox_modulo.getSelectedItem();
+
 				System.out.println("Minhas perguntas? " + minhaQuestao + " "
 						+ moduloEscolhido + " " + subModuloEscolhido + " "
 						+ nivelDificuldade);
-				
-				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
-						subModuloEscolhido, nivelDificuldade, minhaQuestao,
-						currentUser);
-				questionTableModel.limpar();
-				questionTableModel.addListaDeQuestion(listQuestions);
+//				if(moduloEscolhido.equals(" ") && subModuloEscolhido.equals(" ") && nivelDificuldade.equals(" ") ){
+//					System.out.println("por favor faça uma pesquisa!!!");
+//				}else{				
+					listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
+							subModuloEscolhido, nivelDificuldade, minhaQuestao,
+							user);
+					questionTableModel.limpar();
+					questionTableModel.addListaDeQuestion(listQuestions);
+					
+					if(tableData.getRowCount() > 0){
+						btnEditar.setEnabled(minhaQuestao);
+						btnApagar.setEnabled(minhaQuestao);
+					}
+//				}
 			}
 		});
 		// End
-
-		/******* Outros Docentes ****/
+	
+				
+// Botão "Outros Docentes"
 		JButton btnPerguntasOutrosDocentes = new JButton("Outros Docentes");
 		btnPerguntasOutrosDocentes.setBounds(202, 74, 139, 25);
 		contentPane.add(btnPerguntasOutrosDocentes);
+		
 		btnPerguntasOutrosDocentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				minhaQuestao = false;
@@ -263,30 +261,58 @@ public class QuestionsView extends JFrame {
 				
 				listQuestions = controllerQuestions.aplicarFiltro(moduloEscolhido,
 						subModuloEscolhido, nivelDificuldade, minhaQuestao,
-						currentUser);
+						user);
 				questionTableModel.limpar();
 				questionTableModel.addListaDeQuestion(listQuestions);
 				
 				
 			}
 		});
-		// end
-
-
-
+// end
+		
+//Botão Fechar
+		JButton btnFechar = new JButton("Sair");
+		btnFechar.setBounds(573, 315, 97, 25);
+		contentPane.add(btnFechar);
+		btnFechar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				dispose();
+			}
+		});
+//END
+/********************************* **END BOTÕES** ******************************************/
 	}
 
+	
+	public void verDetalhe() {
+		System.err.println(questionSelected);
+		controllerQuestions.getQuestion(questionSelected, user);		
+	}
+	
+	
+	
+	
+// Métodos---Não está no diagrama sequencia.
+	private boolean openWindows(int rowCount, int selectedRow) {
+		if(rowCount < 1){
+			System.err.println("não tem nenhuma questão!!!");
+			return false;
+		}else if(selectedRow < 0){
+			System.err.println("Selecione uma questão");
+			return false;
+		}else{
+			return true;
+		}
+	}
 
-
-	// Métodos---Não está no diagrama sequencia.
 	private String displayCurrentUser() {
-		System.out.println(currentUser); // No relatorio está VOID
+		System.out.println(user); // No relatorio está VOID
 		// System.out.println(user.hashCode());
-		return currentUser.getNome(); // fazer random para escolher um Docente
+		return user.getNome(); // fazer random para escolher um Docente
 										// qualquer
 	}
 	
-	public void preencherSubModulo(JComboBox<String> comboBox, String modulo) {
+	private void preencherSubModulo(JComboBox<String> comboBox, String modulo) {
 		comboBox.removeAllItems();
 		comboBox.addItem(" ");
 		String[] subModulosEscolhidos = controllerQuestions
@@ -295,29 +321,5 @@ public class QuestionsView extends JFrame {
 			comboBox_submodulo.addItem(subModulosEscolhidos[i]);
 		}
 	}
-	
-	@SuppressWarnings("serial")
-	public void carregarInterfazTabela(){
-		String[][] x = {};
-		String[] Colunas ={"Módulo" , "Sub-Modulo", "Nivel", "Pergunta"};
-		dtm = new DefaultTableModel(x, Colunas)
-	    {  
-	        @Override  
-	        public boolean isCellEditable(final int row, final int column) {  
-	            return false;  
-	        }  
-	    };
-		tableData.setModel(dtm);
-	}
-	
-	public void carregarDados(Question q){
-		dtm.insertRow(contador, new Object[]{});
-		dtm.setValueAt(q.getModulo(), contador, 0);
-		dtm.setValueAt(q.getSubModulo(), contador, 1);
-		dtm.setValueAt(q.getNivel(), contador, 2);
-		dtm.setValueAt(q.getPergunta(), contador, 3);
-		contador++;
-	}
-	
-	
+		
 }

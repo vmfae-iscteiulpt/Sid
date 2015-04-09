@@ -16,25 +16,26 @@ public class Question {
 	private int resposta; // resposta
 	private String link;
 	private String emailDocente;
-	private int id;
+	private String explicacao;
+//	private int id;
 	private DbConnection dbconn;
 	private Connection conn;
 	private LinkedList<Question> listaQuestions;
 
 
 	public Question(String modulo, String subModulo, String nivel, String pergunta,
-			int resposta, String link, String emailDocente) {
+			int resposta, String explicacao, String link, String emailDocente) {
 		this.modulo = modulo;
 		this.subModulo = subModulo;
 		this.nivel = nivel;
 		this.pergunta = pergunta;
 		this.resposta = resposta;
+		this.explicacao =  explicacao;
 		this.link = link;
 		this.emailDocente = emailDocente;
 	}
 
 	public Question() {
-
 	}
 	
 
@@ -45,12 +46,12 @@ public class Question {
 
 		try {
 			ResultSet resultSetNivel = dbconn.select("SELECT ID_Nivel FROM Nivel_Dificuldade WHERE Designacao_Nivel="+"'"+nivelQuestion+"'");
-			System.out.println("SELECT * FROM Nivel_Dificuldade WHERE Designacao_Nivel="+"'"+nivelQuestion+"'");
+//			System.out.println("SELECT * FROM Nivel_Dificuldade WHERE Designacao_Nivel="+"'"+nivelQuestion+"'");
 			int idNivel=0;;
 			while (resultSetNivel.next()) {
 				idNivel= resultSetNivel.getInt("ID_Nivel");	
 			}
-			System.out.println("currentUser: "+currentUser.getEmail()+" modulo: "+"'"+ modulo + "'"+" subModulo: " + "'"+ subModulo +"'" +" id_Nivel: " + idNivel);
+//			System.out.println("currentUser: "+currentUser.getEmail()+" modulo: "+"'"+ modulo + "'"+" subModulo: " + "'"+ subModulo +"'" +" id_Nivel: " + idNivel);
 
 						
 			ResultSet resultSet = dbconn.select("SELECT * FROM Questao");
@@ -58,7 +59,8 @@ public class Question {
 				if (minhaQuestao == false && !currentUser.getEmail().equals(resultSet.getString("Email_Docente"))){ // pesquisa de "Outros Docentes"
 					
 					if(modulo.equals(" ") && nivelQuestion.equals(" ")){
-						listaQuestions.removeAll(listaQuestions);//remove todos os elementos da lista!
+						System.out.println("Todas minhas perguntas ");
+						addListaQuestions(resultSet,  listaQuestions);
 						
 					}else if(modulo.equals(" ") && idNivel==resultSet.getInt("ID_Nivel")){//filtra pelo niveis.!
 						System.out.println("aplicar filtro só pelo nivel ");
@@ -84,7 +86,8 @@ public class Question {
 					if (minhaQuestao == true && currentUser.getEmail().equals(resultSet.getString("Email_Docente"))){ // pesquisa de "Outros Docentes"
 						
 						if(modulo.equals(" ") && nivelQuestion.equals(" ")){
-							listaQuestions.removeAll(listaQuestions);//remove todos os elementos da lista!
+							System.out.println("Todas minhas perguntas ");
+							addListaQuestions(resultSet,  listaQuestions);
 							
 						}else if(modulo.equals(" ") && idNivel==resultSet.getInt("ID_Nivel")){//filtra pelo niveis.!
 							System.out.println("aplicar filtro só pelo nivel ");
@@ -120,7 +123,6 @@ public class Question {
 			// FIM RECOLHA GENERICOS
 		}
 		return listaQuestions;
-
 	}
 
 	private void addListaQuestions(ResultSet resultSet, LinkedList<Question> lista) {
@@ -133,22 +135,23 @@ public class Question {
 			String linkQuestao = resultSet.getString("Link_Ficheiro");
 			int nivelQuestao = resultSet.getInt("ID_Nivel");
 			String emailUserQuestao = resultSet.getString("Email_Docente");
+			String explicacao = resultSet.getString("Explicacao");
 			
 			String designacaoNivel = new String (" ");
 			ResultSet resultSetNivel = dbconn.select("SELECT Designacao_Nivel FROM Nivel_Dificuldade WHERE ID_Nivel="+"'"+nivelQuestao+"'");
 			while (resultSetNivel.next()) {
 				designacaoNivel= resultSetNivel.getString("Designacao_Nivel");
 			}
-			Question questao = new Question(moduloQuestao, subModuloQuestao, designacaoNivel, textoQuestao, respostaQuestao, linkQuestao, emailUserQuestao);
+			Question questao = new Question(moduloQuestao, subModuloQuestao, designacaoNivel, 
+					textoQuestao, respostaQuestao, explicacao, linkQuestao, emailUserQuestao);
 			System.out.println(questao.toString());
 			lista.add(questao);	
-			System.out.println(lista.size());
+//			System.out.println(lista.size());
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	public void apagar() { // Não deveria ser Question question?
@@ -167,56 +170,51 @@ public class Question {
 		return false;
 	}
 	
-	
-	
+
 	public String getModulo() {
 		return modulo;
-	}
-
-	public void setModulo(String modulo) {
-		this.modulo = modulo;
 	}
 
 	public String getSubModulo() {
 		return subModulo;
 	}
 
-	public void setSubModulo(String subModulo) {
-		this.subModulo = subModulo;
-	}
-
 	public String getNivel() {
 		return nivel;
-	}
-
-	public void setNivel(String nivel) {
-		this.nivel = nivel;
 	}
 
 	public String getPergunta() {
 		return pergunta;
 	}
 
-	public void setPergunta(String pergunta) {
-		this.pergunta = pergunta;
+	public int getResposta() {
+		return resposta;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public String getEmailDocente() {
+		return emailDocente;
+	}
+
+	public String getExplicacao() {
+		return explicacao;
 	}
 
 	public static void main(String[] args) {
 		Question q = new Question();
 		Docente d = new Docente("victor@iscte.pt", "Victor", "Victor");
 		q.aplicarFiltro("Portugues", " ", " ", false, d);
-		
-		
 	}
-	
 
-
-	
 	@Override
 	public String toString() {
 		return "Question [modulo=" + modulo + ", subModulo=" + subModulo
-				+ ", nivel=" + nivel + ", pergunta=" + pergunta + ", emailDocente="
-				+ emailDocente + "]";
+				+ ", nivel=" + nivel + ", pergunta=" + pergunta + ", resposta="
+				+ resposta + ", link=" + link + ", emailDocente="
+				+ emailDocente + ", explicacao=" + explicacao + "]";
 	}
 
 }
