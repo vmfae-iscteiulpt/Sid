@@ -4,11 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultCaret;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
-
-import com.sun.corba.se.spi.ior.MakeImmutable;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,9 +30,9 @@ public class DetailsView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DetailsView(Question questionSelected, Docente user) {
+	public DetailsView(Question question, Docente user) {
 		this.currentUser=user;
-		this.questionSelected=questionSelected;
+		this.questionSelected=question;
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -115,7 +112,7 @@ public class DetailsView extends JFrame {
 		
 		
 //Explicação
-		JLabel txtAutorPergunta = new JLabel("Criada por:");
+		JLabel txtAutorPergunta = new JLabel("Criado por:");
 		txtAutorPergunta.setBounds(85, 270, 400, 100);
 		contentPane.add(txtAutorPergunta);
 		JLabel campoCriadorPergunta = new JLabel(questionSelected.getEmailDocente());

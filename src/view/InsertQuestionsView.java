@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import java.awt.Color;
 
@@ -25,11 +27,22 @@ import javax.swing.SpringLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.UIManager;
 import javax.swing.JTextArea;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import model.Docente;
+import model.Question;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+import controller.ControllerQuestions;
+import sun.applet.Main;
 
 public class InsertQuestionsView extends JFrame {
 
@@ -39,6 +52,15 @@ public class InsertQuestionsView extends JFrame {
 	private JTextField campoPergunta;
 	private JTextField campoExplicacao;
 	private JTextField nRespostas;
+	private Docente currentUser;
+	private ControllerQuestions controller;
+	List<String> listModulos = new ArrayList<String>();
+	private String[] loadModulo;
+	private String[] SubloadModulo;
+	private String moduloEscolhido = new String(" ");
+	private boolean temSubmodulo = false;
+	private int count =0;
+	private List<String> listSubModulo =  new ArrayList<String>();
 
 	/**
 	 * Launch the application.
@@ -47,105 +69,137 @@ public class InsertQuestionsView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InsertQuestionsView() {
+	public InsertQuestionsView(Docente user, ControllerQuestions controllerQuestion) {
+		this.currentUser=user;
+		this.controller = controllerQuestion;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 800, 400);
+		setBounds(100, 100, 700, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-		searchModulo = new JTextField();
-		searchModulo.setBounds(63, 10, 134, 28);
-		contentPane.add(searchModulo);
-		searchModulo.setColumns(10);
-
-		JTextPane txtpnMdulo = new JTextPane();
-		txtpnMdulo.setBackground(UIManager.getColor("Button.background"));
-		txtpnMdulo.setText("Módulo: ");
-		txtpnMdulo.setBounds(7, 15, 55, 16);
-		contentPane.add(txtpnMdulo);
-
-		JTextPane txtSubmodulo = new JTextPane();
-		txtSubmodulo.setText("Sub-Modulo: ");
-		txtSubmodulo.setBackground(UIManager.getColor("Button.background"));
+		
+		
+//Sub-Modulo
+		JLabel txtSubmodulo = new JLabel("Sub-Modulo:");
 		txtSubmodulo.setBounds(214, 15, 86, 16);
 		contentPane.add(txtSubmodulo);
 
 		searchSubModulo = new JTextField();
-		searchSubModulo.setColumns(10);
 		searchSubModulo.setBounds(300, 10, 134, 28);
 		contentPane.add(searchSubModulo);
+//End
 
-		JTextPane txtDificuldade = new JTextPane();
-		txtDificuldade.setText("Dificuldade");
-		txtDificuldade.setBackground(UIManager.getColor("Button.background"));
+//Modulo
+		JLabel txtpnMdulo = new JLabel("Módulo:");;
+		txtpnMdulo.setBounds(7, 15, 55, 16);
+		contentPane.add(txtpnMdulo);
+		loadModulo = controller.loadModulos();
+		for (int i = 0; i < loadModulo.length; i++) {
+			listModulos.add(loadModulo[i]);
+		}		
+		searchModulo = new JTextField();
+		searchModulo.setBounds(63, 10, 134, 28);
+		contentPane.add(searchModulo);
+		AutoCompleteDecorator.decorate(searchModulo, listModulos, false);
+		
+		searchModulo.addCaretListener(new CaretListener() {
+			
+			@Override
+			public void caretUpdate(CaretEvent e) { //Este metodo ao fazer uma 2 pesquisa no modulo torna a app lenta... corregir!!!
+				moduloEscolhido =  searchModulo.getText();
+				if(count < 1){
+					for (int i = 0; i < listModulos.size(); i++) {
+						if(listModulos.get(i).equals(moduloEscolhido)){
+							SubloadModulo = controller.loadSubModulos(moduloEscolhido);
+							temSubmodulo=true;
+							sugestaoSubmodulo(temSubmodulo, SubloadModulo);
+						}
+					}
+				}
+
+
+			}
+
+
+		});
+//End
+		
+
+		
+//Nivel Dificuldade
+		JLabel txtDificuldade = new JLabel("Dificuldade:");
 		txtDificuldade.setBounds(451, 15, 75, 16);
 		contentPane.add(txtDificuldade);
 
-		JComboBox cbxNivelDificuldade = new JComboBox();
-		cbxNivelDificuldade.setModel(new DefaultComboBoxModel(new String[] {"Escolha o nivel"}));
-		cbxNivelDificuldade.setToolTipText("Escolha o nivel");
-		cbxNivelDificuldade.setBounds(533, 12, 157, 27);
+		JComboBox<String> cbxNivelDificuldade = new JComboBox<String>();
+		cbxNivelDificuldade.setBounds(533, 12, 100, 27);
 		contentPane.add(cbxNivelDificuldade);
-
-		JTextPane txtPergunta = new JTextPane();
-		txtPergunta.setText("Pergunta:");
-		txtPergunta.setEditable(false);
-		txtPergunta.setBackground(UIManager.getColor("Button.background"));
+		AutoCompleteDecorator.decorate(cbxNivelDificuldade);
+		String[] nivelDificuldade = controller.populateNiveis();
+		cbxNivelDificuldade.addItem(" ");
+		for (int i = 0; i < nivelDificuldade.length; i++) {
+			cbxNivelDificuldade.addItem(nivelDificuldade[i]);
+		}
+		
+//End
+		
+//Pergunta
+		JLabel txtPergunta = new JLabel("Pergunta:");
 		txtPergunta.setBounds(10, 60, 59, 16);
 		contentPane.add(txtPergunta);
-
-		JTextPane txtExplicacao = new JTextPane();
-		txtExplicacao.setText("Explicação: ");
-		txtExplicacao.setEditable(false);
-		txtExplicacao.setBackground(UIManager.getColor("Button.background"));
-		txtExplicacao.setBounds(10, 190, 68, 16);
-		contentPane.add(txtExplicacao);
-
-		JTextPane txtRespostas = new JTextPane();
-		txtRespostas.setText("Respostas:");
-		txtRespostas.setEditable(false);
-		txtRespostas.setBackground(UIManager.getColor("Button.background"));
-		txtRespostas.setBounds(10, 315, 68, 16);
-		contentPane.add(txtRespostas);
-
+			
 		campoPergunta = new JTextField();
-		campoPergunta.setBounds(82, 60, 467, 118);
+		campoPergunta.setBounds(82, 60, 400, 118);
 		contentPane.add(campoPergunta);
 		campoPergunta.setColumns(10);
-
+//end
+		
+//Explicação
+		JLabel txtExplicacao = new JLabel("Explicação:");
+		txtExplicacao.setBounds(10, 190, 68, 16);
+		contentPane.add(txtExplicacao);
+		
 		campoExplicacao = new JTextField();
-		campoExplicacao.setBounds(82, 190, 467, 118);
+		campoExplicacao.setBounds(82, 190, 400, 118);
 		contentPane.add(campoExplicacao);
-		campoExplicacao.setColumns(10);
+//END
 
+//Respostas
+		JLabel txtRespostas = new JLabel("Respostas:");
+		txtRespostas.setBounds(10, 315, 68, 16);
+		contentPane.add(txtRespostas);
+		
 		nRespostas = new JTextField();
 		nRespostas.setBounds(82, 315, 47, 28);
 		contentPane.add(nRespostas);
-		nRespostas.setColumns(10);
+//End
+		
 
-		JTextPane textPane = new JTextPane();
-		textPane.setBounds(561, 60, 219, 146);
-		contentPane.add(textPane);
 
+
+//Link
+		JLabel textLink = new JLabel("url da imagem");
+		textLink.setBounds(500, 60, 100, 10);
+		contentPane.add(textLink);
+		
 		JButton btUpload = new JButton("upload");
-		btUpload.setBounds(556, 218, 87, 29);
+		btUpload.setBounds(500, 200, 80, 20);
 		contentPane.add(btUpload);
 
-		JTextPane txtUrlFicheiro = new JTextPane();
-		txtUrlFicheiro.setBackground(UIManager.getColor("Button.background"));
-		txtUrlFicheiro.setText("url ficheiro");
-		txtUrlFicheiro.setBounds(640, 222, 69, 16);
+		JTextField txtUrlFicheiro = new JTextField();
+		txtUrlFicheiro.setBounds(500, 80, 170, 100);
 		contentPane.add(txtUrlFicheiro);
 
+		
+/*********************** **Botões** ***************************/
 		JButton btInserir = new JButton("Inserir");
-		btInserir.setBounds(432, 315, 117, 29);
+		btInserir.setBounds(380, 315, 100, 29);
 		contentPane.add(btInserir);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(640, 316, 117, 29);
+		btnCancelar.setBounds(550, 315, 100, 29);
 		contentPane.add(btnCancelar);
 
 		btnCancelar.addActionListener(new ActionListener(){
@@ -154,10 +208,22 @@ public class InsertQuestionsView extends JFrame {
 			}
 		});
 
-
-
-
-
+	}
+	
+	
+	private void sugestaoSubmodulo(boolean temSubm,
+			String[] subloadModulo) {
+			searchSubModulo.setText(" ");
+			for (int i = 0; i < SubloadModulo.length; i++) {
+				listSubModulo.add(SubloadModulo[i]);
+			}
+			AutoCompleteDecorator.decorate(searchSubModulo, listSubModulo, false);
+			temSubmodulo=false;
+		
+	}
+	public static void main(String[] args) {
+		InsertQuestionsView i = new InsertQuestionsView(new Docente(), new ControllerQuestions(new Docente()));
+		i.setVisible(true);
 	}
 }
 

@@ -17,7 +17,7 @@ public class ModuleToSubModuleMap {
 																	// letra
 																	// maiuscula
 	private Map<String, ArrayList<String>> modulesSubModelsMap;
-	private ArrayList<String> currentUserModules;
+//	private ArrayList<String> currentUserModules;
 	private Map<String, ArrayList<String>> currentUserModulesSubModelsMap;
 	private Docente currentUser;
 	// DB
@@ -26,8 +26,8 @@ public class ModuleToSubModuleMap {
 
 	// private ResultSet resultSet = null;
 
-	public ModuleToSubModuleMap(Docente currentUser) {
-		this.currentUser = currentUser;
+	public ModuleToSubModuleMap(Docente user) {
+		this.currentUser = user;
 
 	}
 
@@ -94,15 +94,19 @@ public class ModuleToSubModuleMap {
 			e.printStackTrace();
 		}
 
-		subModulos = new String[modulesSubModelsMap.get(module).size()];
-//		System.out.println(subModulos.length);
-		for (int j = 0; j < subModulos.length; j++) {
-			// System.out.println(modulesSubModelsMap.get(module).get(j));
-			subModulos[j] = modulesSubModelsMap.get(module).get(j);
+		if(module.equals(" ")){
+			return new String[0] ;
+		}else{
+			subModulos = new String[modulesSubModelsMap.get(module).size()];
+//			System.out.println(subModulos.length);
+			for (int j = 0; j < subModulos.length; j++) {
+				// System.out.println(modulesSubModelsMap.get(module).get(j));
+				subModulos[j] = modulesSubModelsMap.get(module).get(j);
 
+			}
+			// System.out.println(modulesSubModelsMap.get(module).size());
+			return subModulos;
 		}
-		// System.out.println(modulesSubModelsMap.get(module).size());
-		return subModulos;
 	}
 
 	public boolean isCurrenteUserModule(String module) {

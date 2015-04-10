@@ -153,8 +153,8 @@ public class QuestionsView extends JFrame {
 		contentPane.add(btnAdicionar);
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InsertQuestionsView teste = new InsertQuestionsView();
-				teste.setVisible(true);
+				InsertQuestionsView addQuestion = new InsertQuestionsView(user, controllerQuestions);
+				addQuestion.setVisible(true);
 			}
 		});
 //End
@@ -285,7 +285,6 @@ public class QuestionsView extends JFrame {
 
 	
 	public void verDetalhe() {
-		System.err.println(questionSelected);
 		controllerQuestions.getQuestion(questionSelected, user);		
 	}
 	
