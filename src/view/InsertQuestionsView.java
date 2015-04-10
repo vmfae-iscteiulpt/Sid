@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
@@ -58,7 +59,7 @@ public class InsertQuestionsView extends JFrame {
 	private String[] loadModulo;
 	private String[] SubloadModulo;
 	private String moduloEscolhido = new String(" ");
-	private boolean temSubmodulo = false;
+	private boolean temModulo = false;
 	private int count =0;
 	private List<String> listSubModulo =  new ArrayList<String>();
 
@@ -81,15 +82,7 @@ public class InsertQuestionsView extends JFrame {
 		contentPane.setLayout(null);
 		
 		
-//Sub-Modulo
-		JLabel txtSubmodulo = new JLabel("Sub-Modulo:");
-		txtSubmodulo.setBounds(214, 15, 86, 16);
-		contentPane.add(txtSubmodulo);
 
-		searchSubModulo = new JTextField();
-		searchSubModulo.setBounds(300, 10, 134, 28);
-		contentPane.add(searchSubModulo);
-//End
 
 //Modulo
 		JLabel txtpnMdulo = new JLabel("Módulo:");;
@@ -108,25 +101,42 @@ public class InsertQuestionsView extends JFrame {
 			
 			@Override
 			public void caretUpdate(CaretEvent e) { //Este metodo ao fazer uma 2 pesquisa no modulo torna a app lenta... corregir!!!
-				moduloEscolhido =  searchModulo.getText();
-				if(count < 1){
-					for (int i = 0; i < listModulos.size(); i++) {
-						if(listModulos.get(i).equals(moduloEscolhido)){
-							SubloadModulo = controller.loadSubModulos(moduloEscolhido);
-							temSubmodulo=true;
-							sugestaoSubmodulo(temSubmodulo, SubloadModulo);
-						}
+				for (String item : listModulos) {
+					if(searchModulo.getText().equals(item)){
+						moduloEscolhido=item;
+						temModulo=true;
+						searchSubModulo.setText("");
 					}
 				}
+				
 
+			}
+		});
+//End
+		
+//Sub-Modulo
+		JLabel txtSubmodulo = new JLabel("Sub-Modulo:");
+		txtSubmodulo.setBounds(214, 15, 86, 16);
+		contentPane.add(txtSubmodulo);
 
+		searchSubModulo = new JTextField();
+		searchSubModulo.setBounds(300, 10, 134, 28);
+		contentPane.add(searchSubModulo);
+		searchSubModulo.addCaretListener(new CaretListener() {
+			
+			@Override
+			public void caretUpdate(CaretEvent e) {				
+				if(temModulo){
+					SubloadModulo = controller.loadSubModulos(moduloEscolhido);
+					temModulo=false;
+					preencherSub(SubloadModulo);
+				}
+				
 			}
 
 
 		});
 //End
-		
-
 		
 //Nivel Dificuldade
 		JLabel txtDificuldade = new JLabel("Dificuldade:");
@@ -210,17 +220,13 @@ public class InsertQuestionsView extends JFrame {
 
 	}
 	
-	
-	private void sugestaoSubmodulo(boolean temSubm,
-			String[] subloadModulo) {
-			searchSubModulo.setText(" ");
-			for (int i = 0; i < SubloadModulo.length; i++) {
-				listSubModulo.add(SubloadModulo[i]);
-			}
-			AutoCompleteDecorator.decorate(searchSubModulo, listSubModulo, false);
-			temSubmodulo=false;
-		
+	private void preencherSub(String[] subloadModulo) {
+		for (int i = 0; i < subloadModulo.length; i++) {
+			listSubModulo.add(subloadModulo[i]);
+		}
+		AutoCompleteDecorator.decorate(searchSubModulo, listSubModulo, false);				
 	}
+	
 	public static void main(String[] args) {
 		InsertQuestionsView i = new InsertQuestionsView(new Docente(), new ControllerQuestions(new Docente()));
 		i.setVisible(true);
