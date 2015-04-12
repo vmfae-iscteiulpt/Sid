@@ -163,8 +163,29 @@ public class Question {
 	}
 
 	public boolean inserirQuestao() { // boolean?????????
-		return false;
-	}
+		dbconn = new DbConnection();
+		conn = dbconn.getConn();
+		
+		ResultSet resultSetNivel = dbconn.select("SELECT ID_Nivel FROM Nivel_Dificuldade WHERE Designacao_Nivel="+"'"+nivel+"'");
+		int idNivel=0;
+		int newIDQuestion = getNumberMaxQuestions();
+		
+		try {
+			while (resultSetNivel.next()) {
+				idNivel= resultSetNivel.getInt("ID_Nivel");	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch blockemailDocente
+			e.printStackTrace();
+		}
+System.out.println("email "+emailDocente + " new id " +newIDQuestion);		
+		dbconn.insert("INSERT INTO \"Questao\" (\"Texto\", \"Resposta\", \"Explicacao\", \"Link_Ficheiro\", \"Email_Docente\", \"ID_Nivel\", \"Designacao_Modulo\", \"Designacao_SubModulo\") VALUES"
+												+ " ('" + pergunta + "','" + resposta + "','" + explicacao +"','" + link +"','"+"'" + emailDocente +"'," + idNivel + "','" + modulo + "','" + subModulo + "')");
+		
+	
+
+		
+		return false;	}
 
 	public boolean editarQuestao(Question question) { // boolean???????
 		
@@ -183,7 +204,7 @@ public class Question {
 		
 //		UPDATE Questao set Texto = 'teste21' WHERE ID_Questao=1
 		dbconn.update("UPDATE Questao"+ " SET TEXTO = '"+question.pergunta+"', Resposta="+question.getResposta()+ ", Explicacao='" +question.getExplicacao()
-				+ "' ,Link_Ficheiro='"+question.getLink()+"', ID_NIVEL="+idNivel+", Designacao_SubModulo='"+question.getSubModulo()+"' WHERE ID_Questao =" +question.getIdQuestion());
+				+ "' ,Link_Ficheiro='"+question.getLink()+"', ID_NIVEL="+idNivel+", Designacao_SubModulo='"+question.getSubModulo()+"' WHERE ID_Questao =" +(question.getNumberMaxQuestions()));
 		System.out.println("monkeyyy!");
 
 //				E assim já altera na BD!
@@ -213,9 +234,31 @@ public class Question {
 	}
 	
 
+	public int getNumberMaxQuestions() {
+		dbconn = new DbConnection(); 
+		conn = dbconn.getConn();
+		ResultSet resultSetidQuestion = dbconn.select("SELECT ID_Questao FROM Questao");
+		int idMaxQuestion= 0;
+		try {
+			while (resultSetidQuestion.next()) {
+				idMaxQuestion=resultSetidQuestion.getRow();
+			}
+
+			dbconn.closeStatement();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		idMaxQuestion++;
+		return idMaxQuestion;
+	}
+
 	public int getIdQuestion() {
 		return idQuestion;
 	}
+
 
 	public String getSubModulo() {
 		return subModulo;

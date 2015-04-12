@@ -115,10 +115,15 @@ public class ControllerQuestions {
 		return false;
 	}
 
-	public boolean insertQuestion(String module, String subModule,
-			String nivel, String userEmail, String texto, String explicacao,
+	public boolean insertQuestion( String module, String subModule,
+			String nivel, String userEmail, int resposta, String texto, String explicacao,
 			String link) {
-		return false;
+		
+		Question n = new Question();
+		System.out.println("jjjjj" +n.getNumberMaxQuestions());
+		Question newQuestion = new Question(n.getNumberMaxQuestions(), module, subModule, nivel, texto, resposta, explicacao, link, userEmail);
+		newQuestion.inserirQuestao();
+		return true;
 	}
 
 	public Docente currentDocente() {
