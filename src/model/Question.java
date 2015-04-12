@@ -17,14 +17,15 @@ public class Question {
 	private String link;
 	private String emailDocente;
 	private String explicacao;
-//	private int id;
+	private int idQuestion;
 	private DbConnection dbconn;
 	private Connection conn;
 	private LinkedList<Question> listaQuestions;
 
 
-	public Question(String modulo, String subModulo, String nivel, String pergunta,
+	public Question(int idQuestion, String modulo, String subModulo, String nivel, String pergunta,
 			int resposta, String explicacao, String link, String emailDocente) {
+		this.idQuestion=idQuestion;
 		this.modulo = modulo;
 		this.subModulo = subModulo;
 		this.nivel = nivel;
@@ -34,6 +35,7 @@ public class Question {
 		this.link = link;
 		this.emailDocente = emailDocente;
 	}
+
 
 	public Question() {
 	}
@@ -128,6 +130,7 @@ public class Question {
 	private void addListaQuestions(ResultSet resultSet, LinkedList<Question> lista) {
 		try {
 			
+			int idQuestion = resultSet.getInt("ID_Questao");
 			String moduloQuestao = resultSet.getString("Designacao_Modulo");
 			String subModuloQuestao = resultSet.getString("Designacao_SubModulo");
 			String textoQuestao = resultSet.getString("Texto");
@@ -142,10 +145,11 @@ public class Question {
 			while (resultSetNivel.next()) {
 				designacaoNivel= resultSetNivel.getString("Designacao_Nivel");
 			}
-			Question questao = new Question(moduloQuestao, subModuloQuestao, designacaoNivel, 
+			Question questao = new Question(idQuestion, moduloQuestao, subModuloQuestao, designacaoNivel, 
 					textoQuestao, respostaQuestao, explicacao, linkQuestao, emailUserQuestao);
 			System.out.println(questao.toString());
 			lista.add(questao);	
+
 //			System.out.println(lista.size());
 			
 		} catch (SQLException e) {
@@ -163,7 +167,40 @@ public class Question {
 	}
 
 	public boolean editarQuestao(Question question) { // boolean???????
-		return false;
+		
+		dbconn = new DbConnection();
+		conn = dbconn.getConn();
+		ResultSet resultSetNivel = dbconn.select("SELECT ID_Nivel FROM Nivel_Dificuldade WHERE Designacao_Nivel='"+question.getNivel()+"'");
+		int idNivel=0;
+		try {
+			while (resultSetNivel.next()) {
+				idNivel= resultSetNivel.getInt("ID_Nivel");	
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		UPDATE Questao set Texto = 'teste21' WHERE ID_Questao=1
+		dbconn.update("UPDATE Questao"+ " SET TEXTO = '"+question.pergunta+"', Resposta="+question.getResposta()+ ", Explicacao='" +question.getExplicacao()
+				+ "' ,Link_Ficheiro='"+question.getLink()+"', ID_NIVEL="+idNivel+", Designacao_SubModulo='"+question.getSubModulo()+"' WHERE ID_Questao =" +question.getIdQuestion());
+		System.out.println("monkeyyy!");
+
+//				E assim já altera na BD!
+//		dbconn.insert("UPDATE \"Questao\" SET \"Text\"="+question.getPergunta() +" Where \"ID_Questao\"='"+module+"', '"+currentUser.getEmail()+"')");
+//		dbconn.insert("INSERT INTO \"Modulo\" (\"Designacao_Modulo\" ,\"Email_Docente\") VALUES ('"+module+"', '"+currentUser.getEmail()+"')");
+
+				
+		try {//erro na ligaçao no limite
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+		
+		return true ;
 	}
 
 	public boolean userQuestion(Docente user) {
@@ -173,6 +210,11 @@ public class Question {
 
 	public String getModulo() {
 		return modulo;
+	}
+	
+
+	public int getIdQuestion() {
+		return idQuestion;
 	}
 
 	public String getSubModulo() {

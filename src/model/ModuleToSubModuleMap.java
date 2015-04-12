@@ -12,7 +12,7 @@ import controller.DbConnection;
 
 public class ModuleToSubModuleMap {
 
-	private ArrayList<String> modules = new ArrayList<String>(); // Relatorio
+	private ArrayList<String> modules; // Relatorio
 																	// esta com
 																	// letra
 																	// maiuscula
@@ -34,6 +34,7 @@ public class ModuleToSubModuleMap {
 	public String[] getModules() {
 		dbConnection = new DbConnection();
 		conn = dbConnection.getConn();
+		modules = new ArrayList<String>();
 		String[] listaModulos;
 		try {
 			// INICIO RECOLHA MODULOS GENERICOS
@@ -61,7 +62,6 @@ public class ModuleToSubModuleMap {
 		for (int i = 0; i < listaModulos.length; i++) {
 			listaModulos[i] = modules.get(i);
 		}
-
 		return listaModulos;
 	}
 
@@ -117,12 +117,12 @@ public class ModuleToSubModuleMap {
 		return false;
 	}
 
-	public void updateModule(String oldString, String newString) {
-
+	public boolean updateModule(String oldString, String newString) {
+		return false;
 	}
 
 	public void updateModulesLists() {
-
+		getModules();
 	}
 
 	public void updateSubModulesLists() {
@@ -130,8 +130,23 @@ public class ModuleToSubModuleMap {
 	}
 
 	public void insertModule(String module) { // Relatorio nao recebe parametros
+		dbConnection = new DbConnection();
+		conn = dbConnection.getConn();
+		if(module==null || module.trim().isEmpty() ){
+			System.out.println("!nao ha nada pá nng");
+			return ;
+		}else{
+			dbConnection.insert("INSERT INTO \"Modulo\" (\"Designacao_Modulo\" ,\"Email_Docente\") VALUES ('"+module+"', '"+currentUser.getEmail()+"')");
 
+				}
+		try {//erro na ligaçao no limite
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+
 
 	public void insertSubModule(String module, String subModule) {
 

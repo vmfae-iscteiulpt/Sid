@@ -159,11 +159,5 @@ public class DetailsView extends JFrame {
 	}
 	
 	
-	public static void main(String[] args) {
-		
-		DetailsView d = new DetailsView(new Question("portugues", "Lusiadas", "Facil", "o que é essa Pergunta dos lusiadas?", 3, "responde o que quisseremeoewnfoienwofinewofnoewn oin ewonoweno eon oefwef ewf wef wefwefwefwefwef wefwefwefwefwef wefwefwefwef wefewfwefwef wefwefwef wefwefwe fwefwef wef wef wefwefwef wefwefewf wefwef", "elelelelele", "victor@iscte.pt"), 
-				new Docente("victor@iscte.pt", "Victor Andrade", "ekekkeke"));
-		
-		d.setVisible(true);
-	}
+
 }

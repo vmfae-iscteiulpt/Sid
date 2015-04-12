@@ -2,7 +2,10 @@ package controller;
 
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import view.DetailsView;
+import view.EditQuestionView;
 import model.Difficulty;
 import model.Docente;
 import model.ModuleToSubModuleMap;
@@ -13,21 +16,24 @@ public class ControllerQuestions {
 	private boolean minhaQuestao; // minhasQuestao no relatorio
 	private Question question = new Question();
 	private LinkedList<Question> listaQuestoes;
-	private Docente currentUser; // Relatorio diz USER
-	private ModuleToSubModuleMap moduleToSubModuleObject = new ModuleToSubModuleMap(currentUser);
+	private Docente currentUser1; // Relatorio diz USER
+	private ModuleToSubModuleMap moduleToSubModule;
 	private Difficulty nivel = new Difficulty(); // Não está diagrama no classes..E a classe chama-se Difficult
+	private String novoModulo=" ";
+	private String moduloActual = " ";
 	
 	
 	public ControllerQuestions(Docente currentUser) { // Relatorio diz USER
-		this.currentUser = currentUser;
+		this.currentUser1 = currentUser;
+		moduleToSubModule = new ModuleToSubModuleMap(currentUser1);
 	}
 
 	public String[] loadModulos() {
-		return moduleToSubModuleObject.getModules();
+		return moduleToSubModule.getModules();
 	}
 
 	public String[] loadSubModulos(String selectedModule) {
-		return moduleToSubModuleObject.getSubModules(selectedModule);
+		return moduleToSubModule.getSubModules(selectedModule);
 	}
 
 	public String[] populateNiveis() { // Dificuldade
@@ -35,7 +41,7 @@ public class ControllerQuestions {
 	}
 
 	public LinkedList<Question> aplicarFiltro(String module,String subModule, String nivel, boolean minhaQuestao, Docente user){ //Diagrama classe tem tbm int texto
-		System.out.println(module+ subModule+ nivel+ minhaQuestao+ user);
+//		System.out.println(module+ subModule+ nivel+ minhaQuestao+ user);
 		
 		listaQuestoes = question.aplicarFiltro(module, subModule, nivel, minhaQuestao, user);
 		return listaQuestoes;
@@ -51,10 +57,15 @@ public class ControllerQuestions {
 	String texto, String explicacao, int respostas, String link, Docente user), 
 	podemos manter a instancia da mesma pergunta passada no paramentro, e provalvemente deveria ser um procedimento...
 	*/
-	public Question getQuestion(Question questionSelected, Docente user) {
-		DetailsView  detailView = new DetailsView(questionSelected, user);//
-		detailView.setVisible(true);
-		return questionSelected;
+	public void getQuestion(Question questionSelected, boolean editQuestion, Docente user, ControllerQuestions controlador) {//era um Question... o nom também nao faz sentido...
+		if(editQuestion){
+			EditQuestionView editView = new EditQuestionView(questionSelected , controlador, user);
+			editView.setVisible(true);
+		}else{
+			DetailsView  detailView = new DetailsView(questionSelected, user);//
+			detailView.setVisible(true);
+		}
+
 	}
 
 	public boolean isUserQuestion(String module, String subModule,
@@ -62,15 +73,45 @@ public class ControllerQuestions {
 		return false;
 	}
 
-	public String openStringChanger() {
-		return null;
+	public String openStringChanger(String ModuloActual) {  //Estava como String
+		this.moduloActual=ModuloActual;
+		novoModulo = JOptionPane.showInputDialog("Qual o novo módulo a inserir?");
+		if(novoModulo == null){
+			System.out.println("");
+			return " ";
+		}
+			
+
+		System.out.println("Novo modulo: "+ novoModulo);
+		
+		verificar(novoModulo);
+		moduleToSubModule.insertModule(novoModulo);
+//		moduleToSubModuleObject.updateModule(moduloActual, novoModulo);
+
+			return novoModulo;
+
+	}
+
+	private void verificar(String novoModulo) {
+		String[] vModulos = loadModulos();
+		for (int i = 0; i < vModulos.length; i++) {
+			if(vModulos[i].equals(novoModulo)){
+				JOptionPane.showMessageDialog(null, 
+					    "O modulo que inseriu já existe, por favor tente novamente!");
+				openStringChanger(moduloActual);
+			}
+		}	
 	}
 
 	public boolean submittChanges(Question question) {
-		return false;
+		
+			question.editarQuestao(question);
+			return true;
+	
 	}
 
 	public boolean insertModule() {
+		
 		return false;
 	}
 
@@ -81,7 +122,7 @@ public class ControllerQuestions {
 	}
 
 	public Docente currentDocente() {
-		currentUser = new Docente();
-		return currentUser.currentDocente();
+		currentUser1 = new Docente();
+		return currentUser1.currentDocente();
 	}
 }

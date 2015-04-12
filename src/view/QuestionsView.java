@@ -4,18 +4,24 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.LinkedList;
+
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+
 import model.Docente;
 import model.Question;
+
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import controller.ControllerQuestions;
 
 
@@ -46,6 +52,7 @@ public class QuestionsView extends JFrame {
 	private LinkedList<Question> listQuestions;
 	private String[] vetorModulos;
 	private Question questionSelected;
+	private boolean editQ;
 
 	/**
 	 * Launch the application.
@@ -168,8 +175,8 @@ public class QuestionsView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 	
 				if(openWindows(questionTableModel.getRowCount(), tableData.getSelectedRow())){
-					questionSelected= questionTableModel.getQuestion(tableData.getSelectedRow());
-					verDetalhe();
+					editQ=false;
+					verDetalhe(editQ);
 
 				}
 			}
@@ -189,10 +196,16 @@ public class QuestionsView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(openWindows(questionTableModel.getRowCount(), tableData.getSelectedRow())){
-					ViewEditQuestion viewEdit = new ViewEditQuestion();
-					viewEdit.setVisible(true);
+					editQ=true;
+					editar(editQ);
+//					questionSelected= questionTableModel.getQuestion(tableData.getSelectedRow());
+//					EditQuestionView eqv = new EditQuestionView(questionSelected, controllerQuestions, user);
+//					eqv.setVisible(true);
+					
 				}
 			}
+
+
 		});
 //end
 		
@@ -283,21 +296,27 @@ public class QuestionsView extends JFrame {
 /********************************* **END BOTÕES** ******************************************/
 	}
 
+	//no relatorio nao recebe nenhum parametro, mas como no DS esta s
 	
-	public void verDetalhe() {
-		controllerQuestions.getQuestion(questionSelected, user);		
+	public void editar(boolean editQuestion) {
+		verDetalhe(editQuestion);
+
+
 	}
-	
-	
-	
+	public void verDetalhe(boolean editQuestion) {
+		questionSelected= questionTableModel.getQuestion(tableData.getSelectedRow());
+		controllerQuestions.getQuestion(questionSelected, editQuestion, user, controllerQuestions);		
+	}
 	
 // Métodos---Não está no diagrama sequencia.
 	private boolean openWindows(int rowCount, int selectedRow) {
 		if(rowCount < 1){
-			System.err.println("não tem nenhuma questão!!!");
+			JOptionPane.showMessageDialog(this,
+				    "Car@ docente " +user.getNome()+ " ainda não efectuo nenhuma pesquisa de questão" );
 			return false;
 		}else if(selectedRow < 0){
-			System.err.println("Selecione uma questão");
+			JOptionPane.showMessageDialog(this,
+				    "Por favor selecione uma questão!");
 			return false;
 		}else{
 			return true;
